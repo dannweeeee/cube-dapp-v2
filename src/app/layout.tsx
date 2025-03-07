@@ -33,7 +33,7 @@ export default function RootLayout({
       <body>
         <Providers>
           <NProgressBar>
-            <main className="min-h-screen">
+            <main className="min-h-screen circles">
               {children}
               <Toaster />
             </main>

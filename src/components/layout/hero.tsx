@@ -29,7 +29,7 @@ const Hero = () => {
   };
 
   return (
-    <div className="container mx-auto flex flex-col items-center justify-center text-primary py-20 md:py-32 mt-16 md:mt-24 px-4 md:px-8 relative overflow-hidden">
+    <div className="container mx-auto flex flex-col items-center justify-center text-primary py-32 md:py-44 px-4 md:px-8 overflow-hidden">
       <motion.h1
         initial="hidden"
         animate="visible"

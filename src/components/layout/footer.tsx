@@ -8,7 +8,7 @@ import { Github, Twitter } from "lucide-react";
 
 const Footer = () => {
   return (
-    <footer className="bg-gradient-to-b from-white/80 to-white/50 backdrop-blur-sm text-primary py-12 font-sans border-t border-gray-100 shadow-sm">
+    <footer className="backdrop-blur-sm text-primary py-12 font-sans border-t border-gray-100 shadow-sm bg-transparent">
       <div className="container mx-auto px-4">
         <div className="flex flex-col md:flex-row justify-between items-center">
           <div className="mb-6 md:mb-0">
@@ -28,7 +28,7 @@ const Footer = () => {
           </div>
         </div>
 
-        <div className="flex flex-col md:flex-row items-center justify-between pt-8 border-t border-gray-100">
+        <div className="flex flex-col md:flex-row items-center justify-between pt-8">
           <p className="text-sm text-primary/60 mb-4 md:mb-0">
             © {new Date().getFullYear()} Cube Protocol. All rights reserved.
           </p>
