@@ -1,6 +1,5 @@
 "use client";
 
-import Image from "next/image";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
@@ -10,6 +9,7 @@ import { useAccount } from "wagmi";
 import { usePortfolioData } from "@/hooks/usePortfolioData";
 import { formatNumber } from "@/lib/utils";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Badge } from "@/components/ui/badge";
 
 export default function WalletComponent() {
   const router = useRouter();
@@ -18,18 +18,17 @@ export default function WalletComponent() {
 
   return (
     <div className="container mx-auto px-4 lg:px-8 py-8 space-y-8">
-      <div className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-primary/10 text-primary">
+      <Badge className="bg-primary/10 text-primary p-2">
         <Wallet className="w-4 h-4 mr-1" />
         Wallet
-      </div>
+      </Badge>
 
       <div className="flex flex-col gap-8">
-        <div className="flex flex-col lg:flex-row justify-between items-start gap-8">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 flex-grow max-w-3xl">
-            <Card className="transition-all duration-200 bg-white/80 backdrop-blur-sm border shadow-sm hover:shadow-md">
+        <div className="flex flex-col items-center gap-8">
+          <div className="flex flex-row items-center justify-between gap-8 w-full">
+            <Card className="transition-all duration-200 backdrop-blur-sm bg-transparent shadow-none border-none max-w-md">
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                 <CardTitle className="text-lg font-semibold text-primary flex items-center gap-2">
-                  <Wallet className="h-5 w-5" />
                   Balance
                 </CardTitle>
               </CardHeader>
@@ -53,29 +52,29 @@ export default function WalletComponent() {
                 </div>
               </CardContent>
             </Card>
+
+            <div className="flex flex-row gap-4">
+              <Button
+                onClick={() => router.push("/payliao")}
+                className="flex flex-col items-center justify-center gap-2 h-20 w-20 rounded-xl bg-gradient-to-br from-primary/80 to-primary hover:from-primary hover:to-primary/90 shadow-md hover:shadow-xl transition-all duration-300 border-0"
+                variant="outline"
+              >
+                <HandCoins className="h-5 w-5 text-white" />
+                <span className="text-white text-sm font-medium">Deposit</span>
+              </Button>
+              <Button
+                onClick={() => router.push("/payliao")}
+                className="flex flex-col items-center justify-center gap-2 h-20 w-20 rounded-xl bg-gradient-to-br from-primary to-primary/80 hover:from-primary/90 hover:to-primary shadow-md hover:shadow-xl transition-all duration-300"
+              >
+                <SendHorizonal className="h-5 w-5 text-white" />
+                <span className="text-white text-sm font-medium">Payliao</span>
+              </Button>
+            </div>
           </div>
 
-          <div className="flex flex-row gap-4 w-full lg:w-auto">
-            <Button
-              onClick={() => router.push("/payliao")}
-              className="flex flex-col items-center justify-center gap-2 h-28 w-28 transition-all duration-200 hover:shadow-lg"
-              variant="outline"
-            >
-              <HandCoins className="h-6 w-6" />
-              <span>Deposit</span>
-            </Button>
-            <Button
-              onClick={() => router.push("/payliao")}
-              className="flex flex-col items-center justify-center gap-2 h-28 w-28 transition-all duration-200 hover:shadow-lg"
-            >
-              <SendHorizonal className="h-6 w-6" />
-              <span>Payliao</span>
-            </Button>
+          <div className="w-full">
+            <PortfolioTable />
           </div>
-        </div>
-
-        <div className="w-full">
-          <PortfolioTable />
         </div>
       </div>
     </div>
