@@ -22,7 +22,7 @@ const Navbar = () => {
         initial={{ y: -100, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         transition={{ duration: 0.5 }}
-        className="fixed top-0 left-0 right-0 isolate z-10 bg-contrast/50 backdrop-filter backdrop-blur-xl bg"
+        className="fixed top-0 left-0 right-0 isolate z-10 bg-contrast/50 backdrop-filter backdrop-blur-xl bg-transparent"
       >
         <nav
           aria-label="Desktop navigation"
@@ -68,11 +68,7 @@ const Navbar = () => {
             className="block md:hidden ml-8"
           >
             <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-              <Button
-                variant="default"
-                className="rounded-xl"
-                onClick={login}
-              >
+              <Button variant="default" className="rounded-xl" onClick={login}>
                 Login
               </Button>
             </motion.div>
