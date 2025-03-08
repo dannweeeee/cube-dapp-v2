@@ -1,3 +1,5 @@
-export default function Wallet() {
-  return <div></div>;
+import WalletComponent from "@/components/layout/wallet";
+
+export default function WalletPage() {
+  return <WalletComponent />;
 }
