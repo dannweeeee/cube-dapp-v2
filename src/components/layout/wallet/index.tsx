@@ -10,11 +10,43 @@ import { usePortfolioData } from "@/hooks/usePortfolioData";
 import { formatNumber } from "@/lib/utils";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Badge } from "@/components/ui/badge";
+import { useFundWallet, usePrivy } from "@privy-io/react-auth";
+import { toast } from "sonner";
+import { base } from "viem/chains";
 
 export default function WalletComponent() {
   const router = useRouter();
   const { address, isConnected } = useAccount();
   const { portfolioData, isLoading } = usePortfolioData(address, isConnected);
+  const { ready, authenticated } = usePrivy();
+  const { fundWallet } = useFundWallet({
+    onUserExited({ balance }) {
+      if (!balance || balance < BigInt(1000)) {
+        toast.error("Failed to fund wallet. Please try again.");
+      }
+    },
+  });
+
+  const handleFundWallet = async () => {
+    if (!ready || !authenticated) {
+      toast.error("Please login / re-login to fund your wallet");
+      return;
+    }
+
+    try {
+      await fundWallet(address as string, {
+        chain: base,
+        asset: "USDC",
+        amount: "20",
+        card: {
+          preferredProvider: "moonpay",
+        },
+      });
+    } catch (error) {
+      console.error(error);
+      toast.error("Failed to initiate funding. Please try again.");
+    }
+  };
 
   return (
     <div className="container mx-auto px-4 lg:px-8 py-8 space-y-8">
@@ -55,7 +87,7 @@ export default function WalletComponent() {
 
             <div className="flex flex-row gap-4">
               <Button
-                onClick={() => router.push("/payliao")}
+                onClick={handleFundWallet}
                 className="flex flex-col items-center justify-center gap-2 h-20 w-20 rounded-xl bg-gradient-to-br from-primary/80 to-primary hover:from-primary hover:to-primary/90 shadow-md hover:shadow-xl transition-all duration-300 border-0"
                 variant="outline"
               >
