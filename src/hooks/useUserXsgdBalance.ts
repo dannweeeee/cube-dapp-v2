@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { Address, formatUnits } from "viem";
-import { usePublicClient, useBlockNumber } from "wagmi";
+import { usePublicClient } from "wagmi";
 import {
   BASE_SEPOLIA_USDC_ADDRESS,
   BASE_SEPOLIA_XSGD_ADDRESS,
@@ -12,7 +12,6 @@ export function useUserXsgdBalance(address: Address | undefined) {
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [error, setError] = useState<Error | null>(null);
   const publicClient = usePublicClient();
-  const { data: blockNumber } = useBlockNumber({ watch: true });
 
   useEffect(() => {
     const fetchBalance = async () => {
@@ -45,7 +44,7 @@ export function useUserXsgdBalance(address: Address | undefined) {
     };
 
     fetchBalance();
-  }, [address, publicClient, blockNumber]);
+  }, [address, publicClient]);
 
   return { balance, isLoading, error };
 }

@@ -1,13 +1,12 @@
 import { useState, useEffect } from "react";
 import { Address, formatEther } from "viem";
-import { usePublicClient, useBlockNumber } from "wagmi";
+import { usePublicClient } from "wagmi";
 
 export function useUserEthBalance(address: Address | undefined) {
   const [balance, setBalance] = useState<string>("0");
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [error, setError] = useState<Error | null>(null);
   const publicClient = usePublicClient();
-  const { data: blockNumber } = useBlockNumber({ watch: true });
 
   useEffect(() => {
     const fetchBalance = async () => {
@@ -41,7 +40,7 @@ export function useUserEthBalance(address: Address | undefined) {
     };
 
     fetchBalance();
-  }, [address, publicClient, blockNumber]);
+  }, [address, publicClient]);
 
   return { balance, isLoading, error };
 }

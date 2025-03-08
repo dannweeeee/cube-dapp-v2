@@ -23,6 +23,7 @@ import {
 } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
+import { useEffect, useState } from "react";
 
 export default function PortfolioTable() {
   const { address, isConnected } = useAccount();
@@ -30,6 +31,23 @@ export default function PortfolioTable() {
     address,
     isConnected
   );
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    // Function to check if viewport is mobile
+    const checkIfMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+
+    // Initial check
+    checkIfMobile();
+
+    // Add event listener for window resize
+    window.addEventListener("resize", checkIfMobile);
+
+    // Cleanup
+    return () => window.removeEventListener("resize", checkIfMobile);
+  }, []);
 
   if (error) {
     return (
@@ -61,8 +79,87 @@ export default function PortfolioTable() {
     { symbol: "XSGD", name: "XSGD" },
   ];
 
+  // Mobile card view for tokens
+  const renderMobileTokenCard = (
+    token: { 
+      symbol: string; 
+      name: string; 
+      price?: number; 
+      balance?: number; 
+      value?: number; 
+      percentage?: number; 
+    }, 
+    isLoading = false, 
+    isEmptyState = false
+  ) => (
+    <div key={token.symbol} className={cn(
+      "p-4 border-b border-primary/10",
+      isLoading && "animate-pulse"
+    )}>
+      <div className="flex items-center gap-3 mb-3">
+        <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center text-primary">
+          {token.symbol.charAt(0)}
+        </div>
+        <div className="flex flex-col">
+          <span className="font-medium">{token.name}</span>
+          <span className="text-xs text-muted-foreground">
+            {token.symbol}
+          </span>
+        </div>
+      </div>
+      
+      <div className="grid grid-cols-2 gap-3">
+        <div>
+          <span className="text-xs text-muted-foreground block">Price</span>
+          {isEmptyState ? (
+            <Skeleton className="h-4 w-16 mt-1" />
+          ) : (
+            <span className="font-medium">${formatNumber(token.price || 0)}</span>
+          )}
+        </div>
+        
+        <div>
+          <span className="text-xs text-muted-foreground block">Holdings</span>
+          {isEmptyState ? (
+            <Skeleton className="h-4 w-16 mt-1" />
+          ) : (
+            <span className="font-medium">{formatNumber(token.balance || 0)} {token.symbol}</span>
+          )}
+        </div>
+        
+        <div>
+          <span className="text-xs text-muted-foreground block">Value</span>
+          {isEmptyState ? (
+            <Skeleton className="h-4 w-20 mt-1" />
+          ) : (
+            <span className="font-medium">${formatNumber(token.value || 0)}</span>
+          )}
+        </div>
+        
+        <div>
+          <span className="text-xs text-muted-foreground block">Allocation</span>
+          <div className="flex items-center gap-2 mt-1">
+            {isEmptyState ? (
+              <Skeleton className="h-4 w-12" />
+            ) : (
+              <span className="font-medium">{(token.percentage || 0).toFixed(2)}%</span>
+            )}
+            <div className="w-16 h-2 bg-primary/10 rounded-full overflow-hidden">
+              {!isEmptyState && (
+                <div
+                  className="h-full bg-gradient-to-r from-primary/80 to-primary rounded-full transition-all duration-500 ease-in-out"
+                  style={{ width: `${token.percentage || 0}%` }}
+                />
+              )}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+
   return (
-    <Card className="overflow-hidden border shadow-md bg-white/50 backdrop-blur-sm">
+    <Card className="overflow-hidden border shadow-md bg-white/50 backdrop-blur-sm w-full">
       <CardHeader className="pb-2">
         <div className="flex items-center justify-between">
           <div>
@@ -78,83 +175,42 @@ export default function PortfolioTable() {
       </CardHeader>
 
       <CardContent className="p-0">
-        <div className="overflow-x-auto">
-          <Table>
-            <TableHeader>
-              <TableRow className="hover:bg-transparent border-b border-primary/10">
-                <TableHead className="w-[250px] font-semibold text-primary">
-                  Asset
-                </TableHead>
-                <TableHead className="text-right font-semibold text-primary">
-                  Price
-                </TableHead>
-                <TableHead className="text-right font-semibold text-primary">
-                  Holdings
-                </TableHead>
-                <TableHead className="text-right font-semibold text-primary">
-                  Value
-                </TableHead>
-                <TableHead className="text-right font-semibold text-primary">
-                  Allocation
-                </TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {!portfolioData?.tokens.length
-                ? emptyTokens.map((token) => (
-                    <TableRow
-                      key={token.symbol}
-                      className="hover:bg-transparent animate-pulse"
-                    >
-                      <TableCell>
-                        <div className="flex items-center gap-3">
-                          <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center text-primary">
-                            {token.symbol.charAt(0)}
-                          </div>
-                          <div className="flex flex-col">
-                            <span className="font-medium">{token.name}</span>
-                            <span className="text-xs text-muted-foreground">
-                              {token.symbol}
-                            </span>
-                          </div>
-                        </div>
-                      </TableCell>
-                      <TableCell className="text-right">
-                        <div className="flex flex-col items-end">
-                          <Skeleton className="h-4 w-16" />
-                          <span className="text-xs text-muted-foreground">
-                            USD
-                          </span>
-                        </div>
-                      </TableCell>
-                      <TableCell className="text-right">
-                        <div className="flex flex-col items-end">
-                          <Skeleton className="h-4 w-16" />
-                          <span className="text-xs text-muted-foreground">
-                            {token.symbol}
-                          </span>
-                        </div>
-                      </TableCell>
-                      <TableCell className="text-right">
-                        <Skeleton className="h-4 w-20 ml-auto" />
-                      </TableCell>
-                      <TableCell className="text-right">
-                        <div className="flex items-center justify-end gap-2">
-                          <Skeleton className="h-4 w-12" />
-                          <div className="w-24 h-2 bg-primary/10 rounded-full" />
-                        </div>
-                      </TableCell>
-                    </TableRow>
-                  ))
-                : portfolioData.tokens
-                    .sort((a, b) => b.value - a.value)
-                    .map((token) => (
+        {isMobile ? (
+          <div>
+            {!portfolioData?.tokens.length
+              ? emptyTokens.map((token) => renderMobileTokenCard(token, true, true))
+              : portfolioData.tokens
+                  .sort((a, b) => b.value - a.value)
+                  .map((token) => renderMobileTokenCard(token, isLoading))}
+          </div>
+        ) : (
+          <div className="overflow-x-auto">
+            <Table>
+              <TableHeader>
+                <TableRow className="hover:bg-transparent border-b border-primary/10">
+                  <TableHead className="w-[250px] font-semibold text-primary">
+                    Asset
+                  </TableHead>
+                  <TableHead className="text-right font-semibold text-primary">
+                    Price
+                  </TableHead>
+                  <TableHead className="text-right font-semibold text-primary">
+                    Holdings
+                  </TableHead>
+                  <TableHead className="text-right font-semibold text-primary">
+                    Value
+                  </TableHead>
+                  <TableHead className="text-right font-semibold text-primary">
+                    Allocation
+                  </TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {!portfolioData?.tokens.length
+                  ? emptyTokens.map((token) => (
                       <TableRow
                         key={token.symbol}
-                        className={cn(
-                          "hover:bg-primary/5 transition-colors",
-                          isLoading && "animate-pulse"
-                        )}
+                        className="hover:bg-transparent animate-pulse"
                       >
                         <TableCell>
                           <div className="flex items-center gap-3">
@@ -170,48 +226,99 @@ export default function PortfolioTable() {
                           </div>
                         </TableCell>
                         <TableCell className="text-right">
-                          <div className="flex flex-col">
-                            <span className="font-medium">
-                              ${formatNumber(token.price)}
-                            </span>
+                          <div className="flex flex-col items-end">
+                            <Skeleton className="h-4 w-16" />
                             <span className="text-xs text-muted-foreground">
                               USD
                             </span>
                           </div>
                         </TableCell>
                         <TableCell className="text-right">
-                          <div className="flex flex-col">
-                            <span className="font-medium">
-                              {formatNumber(token.balance)}
-                            </span>
+                          <div className="flex flex-col items-end">
+                            <Skeleton className="h-4 w-16" />
                             <span className="text-xs text-muted-foreground">
                               {token.symbol}
                             </span>
                           </div>
                         </TableCell>
-                        <TableCell className="text-right font-medium">
-                          <span className="text-foreground">
-                            ${formatNumber(token.value)}
-                          </span>
+                        <TableCell className="text-right">
+                          <Skeleton className="h-4 w-20 ml-auto" />
                         </TableCell>
                         <TableCell className="text-right">
                           <div className="flex items-center justify-end gap-2">
-                            <span className="font-medium">
-                              {token.percentage.toFixed(2)}%
-                            </span>
-                            <div className="w-24 h-2 bg-primary/10 rounded-full overflow-hidden">
-                              <div
-                                className="h-full bg-gradient-to-r from-primary/80 to-primary rounded-full transition-all duration-500 ease-in-out"
-                                style={{ width: `${token.percentage}%` }}
-                              />
-                            </div>
+                            <Skeleton className="h-4 w-12" />
+                            <div className="w-24 h-2 bg-primary/10 rounded-full" />
                           </div>
                         </TableCell>
                       </TableRow>
-                    ))}
-            </TableBody>
-          </Table>
-        </div>
+                    ))
+                  : portfolioData.tokens
+                      .sort((a, b) => b.value - a.value)
+                      .map((token) => (
+                        <TableRow
+                          key={token.symbol}
+                          className={cn(
+                            "hover:bg-primary/5 transition-colors",
+                            isLoading && "animate-pulse"
+                          )}
+                        >
+                          <TableCell>
+                            <div className="flex items-center gap-3">
+                              <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center text-primary">
+                                {token.symbol.charAt(0)}
+                              </div>
+                              <div className="flex flex-col">
+                                <span className="font-medium">{token.name}</span>
+                                <span className="text-xs text-muted-foreground">
+                                  {token.symbol}
+                                </span>
+                              </div>
+                            </div>
+                          </TableCell>
+                          <TableCell className="text-right">
+                            <div className="flex flex-col">
+                              <span className="font-medium">
+                                ${formatNumber(token.price)}
+                              </span>
+                              <span className="text-xs text-muted-foreground">
+                                USD
+                              </span>
+                            </div>
+                          </TableCell>
+                          <TableCell className="text-right">
+                            <div className="flex flex-col">
+                              <span className="font-medium">
+                                {formatNumber(token.balance)}
+                              </span>
+                              <span className="text-xs text-muted-foreground">
+                                {token.symbol}
+                              </span>
+                            </div>
+                          </TableCell>
+                          <TableCell className="text-right font-medium">
+                            <span className="text-foreground">
+                              ${formatNumber(token.value)}
+                            </span>
+                          </TableCell>
+                          <TableCell className="text-right">
+                            <div className="flex items-center justify-end gap-2">
+                              <span className="font-medium">
+                                {token.percentage.toFixed(2)}%
+                              </span>
+                              <div className="w-24 h-2 bg-primary/10 rounded-full overflow-hidden">
+                                <div
+                                  className="h-full bg-gradient-to-r from-primary/80 to-primary rounded-full transition-all duration-500 ease-in-out"
+                                  style={{ width: `${token.percentage}%` }}
+                                />
+                              </div>
+                            </div>
+                          </TableCell>
+                        </TableRow>
+                      ))}
+              </TableBody>
+            </Table>
+          </div>
+        )}
       </CardContent>
       <div className="p-6 border-t bg-background/50">
         <div className="flex justify-between items-center">

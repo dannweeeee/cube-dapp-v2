@@ -3,7 +3,8 @@ import { Address } from "viem";
 import { useUserEthBalance } from "./useUserEthBalance";
 import { useUserUsdcBalance } from "./useUserUsdcBalance";
 import { useUserXsgdBalance } from "./useUserXsgdBalance";
-import { usePublicClient, useBlockNumber } from "wagmi";
+import { usePublicClient } from "wagmi";
+import { getTokenPrices } from "@/service/alchemy";
 
 interface TokenData {
   symbol: string;
@@ -26,9 +27,7 @@ export function usePortfolioData(address: Address | undefined, ready: boolean) {
   );
   const [error, setError] = useState<string | null>(null);
   const publicClient = usePublicClient();
-  const { data: blockNumber } = useBlockNumber({ watch: true });
 
-  // Only pass the address to the hooks if we're ready and have an address
   const shouldFetch = ready && address;
 
   const {
@@ -60,7 +59,6 @@ export function usePortfolioData(address: Address | undefined, ready: boolean) {
       setError(null);
 
       try {
-        // Convert balances to numbers
         const balances = [
           { symbol: "ETH", name: "Ethereum", balance: parseFloat(ethBalance) },
           {
@@ -71,23 +69,18 @@ export function usePortfolioData(address: Address | undefined, ready: boolean) {
           { symbol: "XSGD", name: "XSGD", balance: parseFloat(xsgdBalance) },
         ];
 
-        // TODO: Replace with actual price fetching logic
-        // Using mock prices for now
-        const mockPrices = new Map([
-          ["ETH", 3500],
-          ["USDC", 1],
-          ["XSGD", 0.74], // Approximate SGD to USD conversion
-        ]);
+        const prices = await getTokenPrices(
+          balances.map((token) => token.symbol)
+        );
 
-        // Calculate values and percentages
         const tokens = balances.map((token) => {
-          const price = mockPrices.get(token.symbol) || 0;
+          const price = prices.get(token.symbol) || 0;
           const value = token.balance * price;
           return {
             ...token,
             price,
             value,
-            percentage: 0, // Will be calculated after total
+            percentage: 0,
           };
         });
 
@@ -108,22 +101,11 @@ export function usePortfolioData(address: Address | undefined, ready: boolean) {
       }
     };
 
-    // Only fetch if all balance loading is complete
     if (!ethLoading && !usdcLoading && !xsgdLoading) {
       fetchPortfolioData();
     }
-  }, [
-    shouldFetch,
-    ethBalance,
-    usdcBalance,
-    xsgdBalance,
-    ethLoading,
-    usdcLoading,
-    xsgdLoading,
-    blockNumber, // Add blockNumber dependency to refresh on new blocks
-  ]);
+  }, [shouldFetch, ethBalance, usdcBalance, xsgdBalance]);
 
-  // Combine errors if any exist
   useEffect(() => {
     const errors = [ethError, usdcError, xsgdError]
       .filter((err): err is Error => err !== null)

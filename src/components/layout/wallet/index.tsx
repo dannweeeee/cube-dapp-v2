@@ -49,16 +49,18 @@ export default function WalletComponent() {
   };
 
   return (
-    <div className="container mx-auto px-4 lg:px-8 py-8 space-y-8">
-      <Badge className="bg-primary/10 text-primary p-2">
-        <Wallet className="w-4 h-4 mr-1" />
-        Wallet
-      </Badge>
+    <div className="container mx-auto px-4 lg:px-8 py-4 md:py-8 space-y-4 md:space-y-8">
+      <div className="flex justify-center md:justify-start">
+        <Badge className="bg-primary/10 text-primary p-2">
+          <Wallet className="w-4 h-4 mr-1" />
+          Wallet
+        </Badge>
+      </div>
 
-      <div className="flex flex-col gap-8">
-        <div className="flex flex-col items-center gap-8">
-          <div className="flex flex-row items-center justify-between gap-8 w-full">
-            <Card className="transition-all duration-200 backdrop-blur-sm bg-transparent shadow-none border-none max-w-md">
+      <div className="flex flex-col gap-4 md:gap-8">
+        <div className="flex flex-col items-center gap-4 md:gap-8">
+          <div className="flex flex-col sm:flex-row items-center justify-between gap-4 sm:gap-8 w-full">
+            <Card className="transition-all duration-200 backdrop-blur-sm bg-transparent shadow-none border-none w-full sm:max-w-md">
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                 <CardTitle className="text-lg font-semibold text-primary flex items-center gap-2">
                   Balance
@@ -66,14 +68,14 @@ export default function WalletComponent() {
               </CardHeader>
               <CardContent>
                 <div className="flex flex-col gap-1">
-                  {isLoading || !portfolioData ? (
+                  {!portfolioData ? (
                     <>
                       <Skeleton className="h-10 w-32" />
                       <Skeleton className="h-5 w-24" />
                     </>
                   ) : (
                     <>
-                      <p className="text-4xl font-bold">
+                      <p className="text-2xl md:text-4xl font-bold">
                         ${formatNumber(portfolioData.totalValue)}
                       </p>
                       <p className="text-sm text-muted-foreground">
@@ -85,26 +87,26 @@ export default function WalletComponent() {
               </CardContent>
             </Card>
 
-            <div className="flex flex-row gap-4">
+            <div className="flex flex-row gap-4 mt-2 sm:mt-0">
               <Button
                 onClick={handleFundWallet}
-                className="flex flex-col items-center justify-center gap-2 h-20 w-20 rounded-xl bg-gradient-to-br from-primary/80 to-primary hover:from-primary hover:to-primary/90 shadow-md hover:shadow-xl transition-all duration-300 border-0"
+                className="flex flex-col items-center justify-center gap-1 md:gap-2 h-16 w-16 md:h-20 md:w-20 rounded-xl bg-gradient-to-br from-primary/80 to-primary hover:from-primary hover:to-primary/90 shadow-md hover:shadow-xl transition-all duration-300 border-0"
                 variant="outline"
               >
-                <HandCoins className="h-5 w-5 text-white" />
-                <span className="text-white text-sm font-medium">Deposit</span>
+                <HandCoins className="h-4 w-4 md:h-5 md:w-5 text-white" />
+                <span className="text-white text-xs md:text-sm font-medium">Deposit</span>
               </Button>
               <Button
                 onClick={() => router.push("/payliao")}
-                className="flex flex-col items-center justify-center gap-2 h-20 w-20 rounded-xl bg-gradient-to-br from-primary to-primary/80 hover:from-primary/90 hover:to-primary shadow-md hover:shadow-xl transition-all duration-300"
+                className="flex flex-col items-center justify-center gap-1 md:gap-2 h-16 w-16 md:h-20 md:w-20 rounded-xl bg-gradient-to-br from-primary to-primary/80 hover:from-primary/90 hover:to-primary shadow-md hover:shadow-xl transition-all duration-300"
               >
-                <SendHorizonal className="h-5 w-5 text-white" />
-                <span className="text-white text-sm font-medium">Payliao</span>
+                <SendHorizonal className="h-4 w-4 md:h-5 md:w-5 text-white" />
+                <span className="text-white text-xs md:text-sm font-medium">Payliao</span>
               </Button>
             </div>
           </div>
 
-          <div className="w-full">
+          <div className="w-full overflow-x-auto">
             <PortfolioTable />
           </div>
         </div>
