@@ -1,8 +1,8 @@
 import {
   Activity,
   LayoutDashboard,
-  PiggyBank,
   ScanQrCode,
+  Store,
   Wallet,
 } from "lucide-react";
 
@@ -25,13 +25,6 @@ export const navItems = [
     external: false,
   },
   {
-    title: "Vaults",
-    url: "/vaults",
-    segment: "vaults",
-    icon: PiggyBank,
-    external: false,
-  },
-  {
     title: "Payliao",
     url: "/payliao",
     segment: "payliao",
@@ -43,6 +36,13 @@ export const navItems = [
     url: "/activity",
     segment: "activity",
     icon: Activity,
+    external: false,
+  },
+  {
+    title: "Merchant",
+    url: "/merchant",
+    segment: "merchant",
+    icon: Store,
     external: false,
   },
 ];

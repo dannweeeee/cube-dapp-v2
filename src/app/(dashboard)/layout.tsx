@@ -14,7 +14,7 @@ export default async function DashboardLayout({
   return (
     <SidebarProvider defaultOpen={defaultOpen}>
       <DashboardSidebar />
-      <main className="w-full">
+      <main className="w-full circles">
         <SidebarTrigger className="absolute z-50 mt-2 md:hidden" />
         {children}
       </main>
