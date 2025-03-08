@@ -70,7 +70,7 @@ const Navbar = () => {
             <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
               <Button
                 variant="default"
-                className="rounded-full"
+                className="rounded-xl"
                 onClick={login}
               >
                 Login
