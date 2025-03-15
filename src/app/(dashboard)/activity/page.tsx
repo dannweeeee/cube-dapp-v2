@@ -1,3 +1,5 @@
+import ActivityComponent from "@/components/layout/activity";
+
 export default function Activity() {
-  return <div></div>;
+  return <ActivityComponent />;
 }
