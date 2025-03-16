@@ -10,6 +10,7 @@ export default function ActivityComponent() {
           <span className="font-medium text-sm">Activity</span>
         </Badge>
       </div>
+      <div className="flex flex-col gap-4 md:gap-8"></div>
     </div>
   );
 }

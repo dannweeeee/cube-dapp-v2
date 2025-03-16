@@ -10,6 +10,7 @@ export default function HomeComponent() {
           <span className="font-medium text-sm">Home</span>
         </Badge>
       </div>
+      <div className="flex flex-col gap-4 md:gap-8"></div>
     </div>
   );
 }
