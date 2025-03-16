@@ -5,7 +5,7 @@
 
 ## Changes from Cube V1
 
-- Switched to using Privy was wallet provider
+- Switched to using Privy as wallet provider
 - Added XSGD as a payment option
 - Improved UI/UX
 
