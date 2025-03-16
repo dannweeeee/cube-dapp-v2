@@ -4,7 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
 import { HandCoins, SendHorizonal, Wallet } from "lucide-react";
-import PortfolioTable from "./portfolio-table";
+import WalletPortfolioTable from "./wallet-portfolio-table";
 import { useAccount } from "wagmi";
 import { usePortfolioData } from "@/hooks/usePortfolioData";
 import { Badge } from "@/components/ui/badge";
@@ -85,7 +85,7 @@ export default function WalletComponent() {
           </div>
 
           <div className="w-full overflow-x-auto">
-            <PortfolioTable />
+            <WalletPortfolioTable />
           </div>
         </div>
       </div>

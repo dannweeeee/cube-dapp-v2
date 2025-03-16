@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback } from "react";
 import { Address } from "viem";
 
-export function useCheckMerchantIfRegistered(address: Address | undefined) {
+export function useCheckIfMerchantRegistered(address: Address | undefined) {
   const [isRegistered, setIsRegistered] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);

@@ -9,7 +9,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { formatNumber } from "@/lib/utils";
+import { formatNumber } from "@/helpers/format-number";
 import { usePortfolioData } from "@/hooks/usePortfolioData";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Alert, AlertDescription } from "@/components/ui/alert";
@@ -22,11 +22,10 @@ import {
   CardContent,
 } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
-import { useEffect, useState } from "react";
 import { RingLoader } from "react-spinners";
 import { useIsMobile } from "@/hooks/useIsMobile";
 
-export default function PortfolioTable() {
+export default function WalletPortfolioTable() {
   const { address, isConnected } = useAccount();
   const { portfolioData, isLoading, error } = usePortfolioData(
     address,
