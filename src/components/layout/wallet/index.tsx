@@ -7,12 +7,11 @@ import { HandCoins, SendHorizonal, Wallet } from "lucide-react";
 import PortfolioTable from "./portfolio-table";
 import { useAccount } from "wagmi";
 import { usePortfolioData } from "@/hooks/usePortfolioData";
-import { formatNumber } from "@/lib/utils";
-import { Skeleton } from "@/components/ui/skeleton";
 import { Badge } from "@/components/ui/badge";
 import { useFundWallet, usePrivy } from "@privy-io/react-auth";
 import { toast } from "sonner";
 import { base } from "viem/chains";
+import WalletBalanceCard from "./wallet-balance-card";
 
 export default function WalletComponent() {
   const router = useRouter();
@@ -60,32 +59,7 @@ export default function WalletComponent() {
       <div className="flex flex-col gap-4 md:gap-8">
         <div className="flex flex-col items-center gap-4 md:gap-8">
           <div className="flex flex-col sm:flex-row items-center justify-between gap-4 sm:gap-8 w-full">
-            <Card className="transition-all duration-200 backdrop-blur-sm bg-transparent shadow-none border-none w-full sm:max-w-md">
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-lg font-semibold text-primary flex items-center gap-2">
-                  Balance
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="flex flex-col gap-1">
-                  {!portfolioData ? (
-                    <>
-                      <Skeleton className="h-10 w-32" />
-                      <Skeleton className="h-5 w-24" />
-                    </>
-                  ) : (
-                    <>
-                      <p className="text-2xl md:text-4xl font-bold">
-                        ${formatNumber(portfolioData.totalValue)}
-                      </p>
-                      <p className="text-sm text-muted-foreground">
-                        {portfolioData.tokens.length} Assets
-                      </p>
-                    </>
-                  )}
-                </div>
-              </CardContent>
-            </Card>
+            <WalletBalanceCard portfolioData={portfolioData} />
 
             <div className="flex flex-row gap-4 mt-2 sm:mt-0">
               <Button
@@ -94,14 +68,18 @@ export default function WalletComponent() {
                 variant="outline"
               >
                 <HandCoins className="h-4 w-4 md:h-5 md:w-5 text-white" />
-                <span className="text-white text-xs md:text-sm font-medium">Deposit</span>
+                <span className="text-white text-xs md:text-sm font-medium">
+                  Deposit
+                </span>
               </Button>
               <Button
                 onClick={() => router.push("/payliao")}
                 className="flex flex-col items-center justify-center gap-1 md:gap-2 h-16 w-16 md:h-20 md:w-20 rounded-xl bg-gradient-to-br from-primary to-primary/80 hover:from-primary/90 hover:to-primary shadow-md hover:shadow-xl transition-all duration-300"
               >
                 <SendHorizonal className="h-4 w-4 md:h-5 md:w-5 text-white" />
-                <span className="text-white text-xs md:text-sm font-medium">Payliao</span>
+                <span className="text-white text-xs md:text-sm font-medium">
+                  Payliao
+                </span>
               </Button>
             </div>
           </div>

@@ -6,7 +6,7 @@ import { useUserXsgdBalance } from "./useUserXsgdBalance";
 import { usePublicClient } from "wagmi";
 import { getTokenPrices } from "@/service/alchemy";
 
-interface TokenData {
+export interface TokenData {
   symbol: string;
   name: string;
   balance: number;
@@ -15,7 +15,7 @@ interface TokenData {
   percentage: number;
 }
 
-interface PortfolioData {
+export interface PortfolioData {
   tokens: TokenData[];
   totalValue: number;
 }
