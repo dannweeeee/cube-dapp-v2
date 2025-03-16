@@ -55,70 +55,71 @@ export default function MerchantComponent() {
         </Badge>
       </div>
 
-      <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
-        <div className="flex flex-col sm:flex-row w-1/2">
-          <MerchantXsgdBalanceCard />
-          <MerchantUsdcBalanceCard />
+      <div className="flex flex-col gap-4 md:gap-8">
+        <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
+          <div className="flex flex-col sm:flex-row w-1/2">
+            <MerchantXsgdBalanceCard />
+            <MerchantUsdcBalanceCard />
+          </div>
+          <div className="flex items-center justify-center sm:justify-end">
+            <MerchantRegistrationModal />
+          </div>
         </div>
-        <div className="flex items-center justify-center sm:justify-end">
-          <MerchantRegistrationModal />
-        </div>
-      </div>
-
-      {isRegistered ? (
-        <>
-          {isLoading ? (
-            <div className="grid gap-4 sm:grid-cols-2">
-              <Skeleton className="h-40 w-full rounded-lg" />
-              <Skeleton className="h-40 w-full rounded-lg" />
-            </div>
-          ) : (
-            <div className="grid gap-4 sm:grid-cols-2">
-              {merchants.map(
-                (merchant: {
-                  uen: string;
-                  name: string;
-                  owner: string;
-                  address: string;
-                }) => (
-                  <div key={merchant.address}>
-                    <MerchantDetailsCard
-                      uen={merchant.uen}
-                      name={merchant.name}
-                    />
-                    {isMerchantVaultEnabled && (
-                      <MerchantVaultBalanceCard
+        {isRegistered ? (
+          <>
+            {isLoading ? (
+              <div className="grid gap-4 sm:grid-cols-2">
+                <Skeleton className="h-40 w-full rounded-lg" />
+                <Skeleton className="h-40 w-full rounded-lg" />
+              </div>
+            ) : (
+              <div className="grid gap-4 sm:grid-cols-2">
+                {merchants.map(
+                  (merchant: {
+                    uen: string;
+                    name: string;
+                    owner: string;
+                    address: string;
+                  }) => (
+                    <div key={merchant.address}>
+                      <MerchantDetailsCard
                         uen={merchant.uen}
                         name={merchant.name}
                       />
-                    )}
-                  </div>
-                )
+                      {isMerchantVaultEnabled && (
+                        <MerchantVaultBalanceCard
+                          uen={merchant.uen}
+                          name={merchant.name}
+                        />
+                      )}
+                    </div>
+                  )
+                )}
+              </div>
+            )}
+            <div className="w-full overflow-x-auto">
+              {isLoading ? (
+                <Skeleton className="h-64 w-full rounded-lg" />
+              ) : (
+                merchants.length > 0 && <MerchantSalesTable />
               )}
             </div>
-          )}
-          <div className="w-full overflow-x-auto">
-            {isLoading ? (
-              <Skeleton className="h-64 w-full rounded-lg" />
-            ) : (
-              merchants.length > 0 && <MerchantSalesTable />
-            )}
+          </>
+        ) : (
+          <div className="bg-white/50 shadow rounded-lg p-6 text-center space-y-4">
+            <div className="flex justify-center">
+              <Store className="h-12 w-12 text-gray-400" />
+            </div>
+            <h3 className="text-lg font-medium text-gray-900">
+              No Registered Merchants
+            </h3>
+            <p className="text-gray-500 max-w-md mx-auto">
+              You don't have any registered merchants yet. Register a merchant
+              to start tracking sales and managing your business.
+            </p>
           </div>
-        </>
-      ) : (
-        <div className="bg-white/50 shadow rounded-lg p-6 text-center space-y-4">
-          <div className="flex justify-center">
-            <Store className="h-12 w-12 text-gray-400" />
-          </div>
-          <h3 className="text-lg font-medium text-gray-900">
-            No Registered Merchants
-          </h3>
-          <p className="text-gray-500 max-w-md mx-auto">
-            You don't have any registered merchants yet. Register a merchant to
-            start tracking sales and managing your business onchain.
-          </p>
-        </div>
-      )}
+        )}
+      </div>
     </div>
   );
 }
