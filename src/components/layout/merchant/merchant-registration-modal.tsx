@@ -199,9 +199,11 @@ export default function MerchantRegistrationModal() {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button className="rounded-xl bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70 text-white px-4 py-2 text-sm font-medium shadow-md hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1 flex items-center gap-2">
-          <Store className="w-4 h-4" />
-          Register Merchant
+        <Button className="flex flex-col items-center justify-center gap-1 md:gap-2 h-16 w-16 md:h-20 md:w-20 rounded-xl bg-gradient-to-br from-primary/80 to-primary hover:from-primary hover:to-primary/90 shadow-md hover:shadow-xl transition-all duration-300 border-0">
+          <Store className="w-4 h-4 md:w-5 md:h-5 text-white" />
+          <span className="text-white text-xs md:text-sm font-medium">
+            Register
+          </span>
         </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-md md:max-w-lg p-0 overflow-hidden border border-primary/10 bg-white/95 backdrop-blur-sm">

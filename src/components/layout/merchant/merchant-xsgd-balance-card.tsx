@@ -1,23 +1,22 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
-import { PortfolioData } from "@/hooks/usePortfolioData";
 import { formatNumber } from "@/helpers/format-number";
+import { useAccount } from "wagmi";
+import { useUserXsgdBalance } from "@/hooks/useUserXsgdBalance";
 
-export default function WalletBalanceCard({
-  portfolioData,
-}: {
-  portfolioData: PortfolioData | null;
-}) {
+export default function MerchantXsgdBalanceCard() {
+  const { address } = useAccount();
+  const { balance, isLoading, error } = useUserXsgdBalance(address);
   return (
     <Card className="transition-all duration-200 backdrop-blur-sm shadow-none border-none w-full sm:max-w-md bg-transparent">
       <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
         <CardTitle className="text-lg font-semibold text-primary flex items-center gap-2">
-          Balance
+          XSGD Balance
         </CardTitle>
       </CardHeader>
       <CardContent>
         <div className="flex flex-col gap-1">
-          {!portfolioData ? (
+          {isLoading ? (
             <>
               <Skeleton className="h-10 w-32" />
               <Skeleton className="h-5 w-24" />
@@ -25,11 +24,9 @@ export default function WalletBalanceCard({
           ) : (
             <>
               <p className="text-2xl md:text-4xl font-bold">
-                ${formatNumber(portfolioData.totalValue)}
+                S${formatNumber(parseFloat(balance))}
               </p>
-              <p className="text-sm text-muted-foreground">
-                {portfolioData.tokens.length} Assets
-              </p>
+              <p className="text-sm text-muted-foreground">XSGD</p>
             </>
           )}
         </div>

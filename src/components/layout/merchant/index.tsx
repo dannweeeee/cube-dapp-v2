@@ -12,13 +12,16 @@ import MerchantDetailsCard from "./merchant-details-card";
 import MerchantVaultBalanceCard from "./merchant-vault-balance-card";
 import MerchantSalesTable from "./merchant-sales-table";
 import MerchantRegistrationModal from "./merchant-registration-modal";
+import { Skeleton } from "@/components/ui/skeleton";
+import MerchantXsgdBalanceCard from "./merchant-xsgd-balance-card";
+import MerchantUsdcBalanceCard from "./merchant-usdc-balance-card";
 
 export default function MerchantComponent() {
   const { address } = useAccount();
   const { isRegistered } = useCheckIfMerchantRegistered(address);
   const { isMerchantVaultEnabled } = useCheckIfMerchantVaultIsEnabled(address);
 
-  const { data } = useReadContract({
+  const { data, isLoading } = useReadContract({
     abi: RegistryAbi,
     address: BASE_SEPOLIA_REGISTRY_ADDRESS,
     functionName: "getMerchantsByWalletAddress",
@@ -52,33 +55,54 @@ export default function MerchantComponent() {
         </Badge>
       </div>
 
+      <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
+        <div className="flex flex-col sm:flex-row w-1/2">
+          <MerchantXsgdBalanceCard />
+          <MerchantUsdcBalanceCard />
+        </div>
+        <div className="flex items-center justify-center sm:justify-end">
+          <MerchantRegistrationModal />
+        </div>
+      </div>
+
       {isRegistered ? (
         <>
-          <div className="grid gap-4 sm:grid-cols-2">
-            {merchants.map(
-              (merchant: {
-                uen: string;
-                name: string;
-                owner: string;
-                address: string;
-              }) => (
-                <div key={merchant.address}>
-                  <MerchantDetailsCard
-                    uen={merchant.uen}
-                    name={merchant.name}
-                  />
-                  {isMerchantVaultEnabled && (
-                    <MerchantVaultBalanceCard
+          {isLoading ? (
+            <div className="grid gap-4 sm:grid-cols-2">
+              <Skeleton className="h-40 w-full rounded-lg" />
+              <Skeleton className="h-40 w-full rounded-lg" />
+            </div>
+          ) : (
+            <div className="grid gap-4 sm:grid-cols-2">
+              {merchants.map(
+                (merchant: {
+                  uen: string;
+                  name: string;
+                  owner: string;
+                  address: string;
+                }) => (
+                  <div key={merchant.address}>
+                    <MerchantDetailsCard
                       uen={merchant.uen}
                       name={merchant.name}
                     />
-                  )}
-                </div>
-              )
-            )}
-          </div>
+                    {isMerchantVaultEnabled && (
+                      <MerchantVaultBalanceCard
+                        uen={merchant.uen}
+                        name={merchant.name}
+                      />
+                    )}
+                  </div>
+                )
+              )}
+            </div>
+          )}
           <div className="w-full overflow-x-auto">
-            {merchants.length > 0 && <MerchantSalesTable />}
+            {isLoading ? (
+              <Skeleton className="h-64 w-full rounded-lg" />
+            ) : (
+              merchants.length > 0 && <MerchantSalesTable />
+            )}
           </div>
         </>
       ) : (
@@ -91,11 +115,8 @@ export default function MerchantComponent() {
           </h3>
           <p className="text-gray-500 max-w-md mx-auto">
             You don't have any registered merchants yet. Register a merchant to
-            start tracking sales and managing your business.
+            start tracking sales and managing your business onchain.
           </p>
-          <div className="flex items-center justify-center pt-2">
-            <MerchantRegistrationModal />
-          </div>
         </div>
       )}
     </div>
