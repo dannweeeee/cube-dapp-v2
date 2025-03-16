@@ -1,5 +1,8 @@
+"use client";
+
 import { Badge } from "@/components/ui/badge";
 import { ActivityIcon } from "lucide-react";
+import TransactionsTable from "./transactions-table";
 
 export default function ActivityComponent() {
   return (
@@ -10,7 +13,9 @@ export default function ActivityComponent() {
           <span className="font-medium text-sm">Activity</span>
         </Badge>
       </div>
-      <div className="flex flex-col gap-4 md:gap-8"></div>
+      <div className="flex flex-col gap-4 md:gap-8">
+        <TransactionsTable />
+      </div>
     </div>
   );
 }
