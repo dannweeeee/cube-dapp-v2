@@ -11,14 +11,23 @@ export async function registerMerchant(
   owner: string,
   address: Address
 ) {
+  const privateKey = process.env.NEXT_PUBLIC_PRIVATE_KEY;
+  if (!privateKey) {
+    throw new Error("Private key not found in environment variables");
+  }
+
+  // Ensure the private key is properly formatted as a hex string
+  const formattedPrivateKey = privateKey.startsWith("0x")
+    ? (privateKey as `0x${string}`)
+    : (`0x${privateKey}` as `0x${string}`);
+
   const walletClient = createWalletClient({
     chain: baseSepolia,
     transport: http(),
   });
 
-  const account = privateKeyToAccount(
-    `0x${process.env.NEXT_PUBLIC_PRIVATE_KEY}`
-  );
+  const account = privateKeyToAccount(formattedPrivateKey);
+
 
   const hash = await walletClient.writeContract({
     address: BASE_SEPOLIA_REGISTRY_ADDRESS,

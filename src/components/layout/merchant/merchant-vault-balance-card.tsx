@@ -10,6 +10,7 @@ import VaultAbi from "@/abis/VaultAbi";
 import RegistryAbi from "@/abis/RegistryAbi";
 import { formatUnits } from "viem";
 import { Button } from "@/components/ui/button";
+import { ArrowDownToLine } from "lucide-react";
 
 interface MerchantVaultBalanceCardProps {
   uen: string;
@@ -48,37 +49,43 @@ export default function MerchantVaultBalanceCard({
     }
   }, [vaultData]);
 
-  console.log(isWithdrawalDisabled);
-
   const handleWithdrawalConfirmationOpen = () => {
     setIsWithdrawalConfirmationOpen(true);
   };
 
   return (
-    <Card>
-      <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-        <CardTitle className="text-sm font-medium">
+    <Card className="overflow-hidden border border-primary/10 shadow-md hover:shadow-lg transition-all duration-300">
+      <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 bg-gradient-to-r from-blue-50 to-white">
+        <CardTitle className="text-sm font-medium text-primary">
           {name}&apos;s Vault
         </CardTitle>
-        <Image src="/icons/usdc.svg" alt="USDC" width={24} height={24} />
+        <div className="p-1 bg-white rounded-full shadow-sm">
+          <Image src="/icons/usdc.svg" alt="USDC" width={24} height={24} />
+        </div>
       </CardHeader>
-      <CardContent>
-        <div className="text-2xl font-bold">{formattedBalance} USDC</div>
-        <p className="text-xs text-muted-foreground mt-2">
-          Aave USDC Lending Market
-        </p>
-        <p className="text-xs text-muted-foreground italic">0.50% APY</p>
-        <div className="mt-4">
+      <CardContent className="pt-6">
+        <div className="flex flex-col gap-1">
+          <div className="text-2xl font-bold text-primary">{formattedBalance} USDC</div>
+          <div className="flex items-center gap-2">
+            <div className="h-2 w-2 rounded-full bg-green-400"></div>
+            <p className="text-xs text-muted-foreground">
+              Aave USDC Lending Market
+            </p>
+          </div>
+          <p className="text-xs font-medium text-green-600">0.50% APY</p>
+        </div>
+        
+        <div className="mt-6">
           <Button
-            className="bg-blue hover:bg-blue-100 text-white w-full sm:w-auto"
+            className="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 rounded-lg flex items-center justify-center gap-2 transition-all duration-300"
             onClick={handleWithdrawalConfirmationOpen}
             disabled={isWithdrawalDisabled}
           >
-            Withdraw
+            <ArrowDownToLine className="h-4 w-4" />
+            Withdraw Funds
           </Button>
         </div>
       </CardContent>
-      <Button>Withdraw</Button>
     </Card>
   );
 }

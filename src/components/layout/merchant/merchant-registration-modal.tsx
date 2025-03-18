@@ -177,7 +177,7 @@ export default function MerchantRegistrationModal() {
           }
         }
         setOpen(false);
-        router.push("/");
+        router.push("/merchant");
       } catch (error) {
         console.error("Error registering merchant:", error);
         toast.error("Registration Error", {
