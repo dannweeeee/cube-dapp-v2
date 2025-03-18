@@ -24,6 +24,7 @@ import {
 import { cn } from "@/lib/utils";
 import { RingLoader } from "react-spinners";
 import { useIsMobile } from "@/hooks/useIsMobile";
+import { useEffect, useState } from "react";
 
 export default function WalletPortfolioTable() {
   const { address, isConnected } = useAccount();
@@ -32,12 +33,22 @@ export default function WalletPortfolioTable() {
     isConnected
   );
   const isMobile = useIsMobile();
+  const [isInitialLoading, setIsInitialLoading] = useState(true);
+  const [displayData, setDisplayData] = useState(portfolioData);
+
+  // Prevent flickering by only updating the displayed data when we have stable data
+  useEffect(() => {
+    if (!isLoading && portfolioData) {
+      setDisplayData(portfolioData);
+      setIsInitialLoading(false);
+    }
+  }, [isLoading, portfolioData]);
 
   if (error) {
     return (
       <Alert
         variant="destructive"
-        className="mt-6 border border-destructive/20 shadow-sm"
+        className="border border-destructive/20 shadow-sm"
       >
         <AlertCircle className="h-4 w-4" />
         <AlertDescription className="font-medium">{error}</AlertDescription>
@@ -47,7 +58,7 @@ export default function WalletPortfolioTable() {
 
   if (!isConnected) {
     return (
-      <Alert className="mt-6 border border-primary/20 bg-primary/5 shadow-sm">
+      <Alert className="border border-primary/20 bg-primary/5 shadow-sm">
         <AlertDescription className="font-medium flex items-center gap-2">
           <RingLoader size={30} color="#FFFFD2" className="text-primary" />
           Please connect your wallet to view your portfolio.
@@ -152,31 +163,31 @@ export default function WalletPortfolioTable() {
   );
 
   return (
-    <Card className="overflow-hidden border bg-white/50 backdrop-blur-sm w-full">
-      <CardHeader className="pb-2">
+    <div className="bg-white/50 backdrop-blur-sm rounded-xl w-full overflow-hidden">
+      <div className="p-4 sm:p-6 pb-2 sm:pb-4 border-b border-gray-100">
         <div className="flex items-center justify-between">
           <div>
-            <CardTitle className="text-xl font-bold text-foreground flex items-center gap-2">
+            <h3 className="text-xl font-bold text-foreground flex items-center gap-2">
               <Coins className="h-5 w-5 text-primary" />
               Assets
-            </CardTitle>
-            <CardDescription className="text-sm text-muted-foreground mt-1">
+            </h3>
+            <p className="text-sm text-muted-foreground mt-1">
               Your current portfolio breakdown
-            </CardDescription>
+            </p>
           </div>
         </div>
-      </CardHeader>
+      </div>
 
-      <CardContent className="p-0">
+      <div className="p-0">
         {isMobile ? (
           <div>
-            {!portfolioData?.tokens.length
+            {isInitialLoading || !displayData?.tokens.length
               ? emptyTokens.map((token) =>
                   renderMobileTokenCard(token, true, true)
                 )
-              : portfolioData.tokens
+              : displayData.tokens
                   .sort((a, b) => b.value - a.value)
-                  .map((token) => renderMobileTokenCard(token, isLoading))}
+                  .map((token) => renderMobileTokenCard(token, false))}
           </div>
         ) : (
           <div className="overflow-x-auto">
@@ -201,7 +212,7 @@ export default function WalletPortfolioTable() {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {!portfolioData?.tokens.length
+                {isInitialLoading || !displayData?.tokens.length
                   ? emptyTokens.map((token) => (
                       <TableRow
                         key={token.symbol}
@@ -247,15 +258,12 @@ export default function WalletPortfolioTable() {
                         </TableCell>
                       </TableRow>
                     ))
-                  : portfolioData.tokens
+                  : displayData.tokens
                       .sort((a, b) => b.value - a.value)
                       .map((token) => (
                         <TableRow
                           key={token.symbol}
-                          className={cn(
-                            "hover:bg-primary/5 transition-colors",
-                            isLoading && "animate-pulse"
-                          )}
+                          className="hover:bg-primary/5 transition-colors"
                         >
                           <TableCell>
                             <div className="flex items-center gap-3">
@@ -316,21 +324,21 @@ export default function WalletPortfolioTable() {
             </Table>
           </div>
         )}
-      </CardContent>
-      <div className="p-6 border-t bg-background/50">
+      </div>
+      <div className="p-4 sm:p-6 border-t bg-background/50">
         <div className="flex justify-between items-center">
           <span className="text-sm text-muted-foreground">
             Total Portfolio Value
           </span>
-          {portfolioData ? (
-            <span className="text-lg font-semibold">
-              ${formatNumber(portfolioData.totalValue)}
-            </span>
-          ) : (
+          {isInitialLoading || !displayData ? (
             <Skeleton className="h-6 w-24" />
+          ) : (
+            <span className="text-lg font-semibold">
+              ${formatNumber(displayData.totalValue)}
+            </span>
           )}
         </div>
       </div>
-    </Card>
+    </div>
   );
 }
