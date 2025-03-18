@@ -4,28 +4,46 @@ import { getUserByWalletAddress } from "@/db/queries/select";
 export const dynamic = "force-dynamic";
 
 export async function GET(request: NextRequest) {
+  console.log("API route hit");
+
   const walletAddress = request.nextUrl.searchParams.get("address");
+  console.log("Requested wallet address:", walletAddress);
 
   if (!walletAddress) {
-    return NextResponse.json(
-      { error: "Wallet address is required" },
-      { status: 400 }
+    return new NextResponse(
+      JSON.stringify({ error: "Wallet address is required" }),
+      {
+        status: 400,
+        headers: {
+          "Content-Type": "application/json",
+          "Cache-Control": "no-store, max-age=0",
+        },
+      }
     );
   }
 
   try {
     const users = await getUserByWalletAddress(walletAddress);
+    console.log("Found users:", users);
 
-    if (users.length === 0) {
-      return NextResponse.json({ error: "User not found" }, { status: 404 });
-    }
-
-    return NextResponse.json(users[0]);
+    return new NextResponse(JSON.stringify({ user: users[0] || null }), {
+      status: 200,
+      headers: {
+        "Content-Type": "application/json",
+        "Cache-Control": "no-store, max-age=0",
+      },
+    });
   } catch (error) {
-    console.error("Error fetching user:", error);
-    return NextResponse.json(
-      { error: "Internal server error" },
-      { status: 500 }
+    console.error("API Error:", error);
+    return new NextResponse(
+      JSON.stringify({ error: "Internal server error" }),
+      {
+        status: 500,
+        headers: {
+          "Content-Type": "application/json",
+          "Cache-Control": "no-store, max-age=0",
+        },
+      }
     );
   }
 }

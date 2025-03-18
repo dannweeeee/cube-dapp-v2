@@ -19,14 +19,32 @@ export function useFetchUserDetailsByAddress(walletAddress: string | null) {
 
       try {
         const response = await fetch(
-          `/api/get-user-by-address?address=${walletAddress}`
+          `/api/get-user-by-address?address=${walletAddress}`,
+          {
+            method: "GET",
+            headers: {
+              "Cache-Control": "no-cache",
+              Pragma: "no-cache",
+            },
+            credentials: "same-origin",
+          }
         );
+
+        // Log the full response for debugging
+        console.log("Response:", {
+          status: response.status,
+          statusText: response.statusText,
+          headers: Object.fromEntries(response.headers.entries()),
+        });
+
         if (!response.ok) {
-          throw new Error("Failed to fetch user");
+          throw new Error(`HTTP error! status: ${response.status}`);
         }
+
         const data = await response.json();
-        setUser(data);
+        setUser(data.user);
       } catch (err) {
+        console.error("Detailed error:", err);
         setError(err instanceof Error ? err.message : "An error occurred");
         setUser(null);
       } finally {

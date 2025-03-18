@@ -2,16 +2,24 @@
 
 import { Button } from "@/components/ui/button";
 import { Highlight } from "@/components/ui/hero-highlight";
+import { useFetchUserDetailsByAddress } from "@/hooks/useFetchUserDetailsByAddress";
 import { useLogin } from "@privy-io/react-auth";
 import { motion } from "framer-motion";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
+import { useAccount } from "wagmi";
 
 const Hero = () => {
   const router = useRouter();
+  const { address } = useAccount();
+  const { user } = useFetchUserDetailsByAddress(address || null);
   const { login } = useLogin({
     onComplete: async () => {
-      router.push("/home");
+      if (user) {
+        router.push("/home");
+      } else {
+        router.push("/register");
+      }
     },
   });
 

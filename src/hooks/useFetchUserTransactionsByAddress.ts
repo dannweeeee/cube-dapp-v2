@@ -21,7 +21,16 @@ export function useFetchUserTransactionsByAddress(
 
       try {
         const response = await fetch(
-          `/api/get-transaction-by-address?user_wallet_address=${walletAddress}`
+          `/api/get-transaction-by-address?user_wallet_address=${walletAddress}`,
+          {
+            method: "GET",
+            headers: {
+              Accept: "application/json",
+              "Cache-Control": "no-cache",
+              Pragma: "no-cache",
+            },
+            credentials: "same-origin",
+          }
         );
         if (!response.ok) {
           throw new Error("Failed to fetch transactions");

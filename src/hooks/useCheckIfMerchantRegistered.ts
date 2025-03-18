@@ -14,7 +14,16 @@ export function useCheckIfMerchantRegistered(address: Address | undefined) {
 
     try {
       const response = await fetch(
-        `/api/get-merchant-by-address?merchant_wallet_address=${address}`
+        `/api/get-merchant-by-address?merchant_wallet_address=${address}`,
+        {
+          method: "GET",
+          headers: {
+            Accept: "application/json",
+            "Cache-Control": "no-cache",
+            Pragma: "no-cache",
+          },
+          credentials: "same-origin",
+        }
       );
       if (!response.ok) {
         throw new Error("Failed to fetch merchant");
