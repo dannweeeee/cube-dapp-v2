@@ -14,17 +14,10 @@ import { usePortfolioData } from "@/hooks/usePortfolioData";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { AlertCircle, Coins } from "lucide-react";
-import {
-  Card,
-  CardHeader,
-  CardTitle,
-  CardDescription,
-  CardContent,
-} from "@/components/ui/card";
-import { cn } from "@/lib/utils";
 import { RingLoader } from "react-spinners";
 import { useIsMobile } from "@/hooks/useIsMobile";
 import { useEffect, useState } from "react";
+import { TokenCardMobile } from "./token-card-mobile";
 
 export default function WalletPortfolioTable() {
   const { address, isConnected } = useAccount();
@@ -36,7 +29,6 @@ export default function WalletPortfolioTable() {
   const [isInitialLoading, setIsInitialLoading] = useState(true);
   const [displayData, setDisplayData] = useState(portfolioData);
 
-  // Prevent flickering by only updating the displayed data when we have stable data
   useEffect(() => {
     if (!isLoading && portfolioData) {
       setDisplayData(portfolioData);
@@ -46,23 +38,9 @@ export default function WalletPortfolioTable() {
 
   if (error) {
     return (
-      <Alert
-        variant="destructive"
-        className="border border-destructive/20 shadow-sm"
-      >
+      <Alert variant="destructive" className="border-none shadow-none">
         <AlertCircle className="h-4 w-4" />
         <AlertDescription className="font-medium">{error}</AlertDescription>
-      </Alert>
-    );
-  }
-
-  if (!isConnected) {
-    return (
-      <Alert className="border border-primary/20 bg-primary/5 shadow-sm">
-        <AlertDescription className="font-medium flex items-center gap-2">
-          <RingLoader size={30} color="#FFFFD2" className="text-primary" />
-          Please connect your wallet to view your portfolio.
-        </AlertDescription>
       </Alert>
     );
   }
@@ -72,95 +50,6 @@ export default function WalletPortfolioTable() {
     { symbol: "USDC", name: "USD Coin" },
     { symbol: "XSGD", name: "XSGD" },
   ];
-
-  const renderMobileTokenCard = (
-    token: {
-      symbol: string;
-      name: string;
-      price?: number;
-      balance?: number;
-      value?: number;
-      percentage?: number;
-    },
-    isLoading = false,
-    isEmptyState = false
-  ) => (
-    <div
-      key={token.symbol}
-      className={cn(
-        "p-4 border-b border-primary/10",
-        isLoading && "animate-pulse"
-      )}
-    >
-      <div className="flex items-center gap-3 mb-3">
-        <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center text-primary">
-          {token.symbol.charAt(0)}
-        </div>
-        <div className="flex flex-col">
-          <span className="font-medium">{token.name}</span>
-          <span className="text-xs text-muted-foreground">{token.symbol}</span>
-        </div>
-      </div>
-
-      <div className="grid grid-cols-2 gap-3">
-        <div>
-          <span className="text-xs text-muted-foreground block">Price</span>
-          {isEmptyState ? (
-            <Skeleton className="h-4 w-16 mt-1" />
-          ) : (
-            <span className="font-medium">
-              ${formatNumber(token.price || 0)}
-            </span>
-          )}
-        </div>
-
-        <div>
-          <span className="text-xs text-muted-foreground block">Holdings</span>
-          {isEmptyState ? (
-            <Skeleton className="h-4 w-16 mt-1" />
-          ) : (
-            <span className="font-medium">
-              {formatNumber(token.balance || 0)} {token.symbol}
-            </span>
-          )}
-        </div>
-
-        <div>
-          <span className="text-xs text-muted-foreground block">Value</span>
-          {isEmptyState ? (
-            <Skeleton className="h-4 w-20 mt-1" />
-          ) : (
-            <span className="font-medium">
-              ${formatNumber(token.value || 0)}
-            </span>
-          )}
-        </div>
-
-        <div>
-          <span className="text-xs text-muted-foreground block">
-            Allocation
-          </span>
-          <div className="flex items-center gap-2 mt-1">
-            {isEmptyState ? (
-              <Skeleton className="h-4 w-12" />
-            ) : (
-              <span className="font-medium">
-                {(token.percentage || 0).toFixed(2)}%
-              </span>
-            )}
-            <div className="w-16 h-2 bg-primary/10 rounded-full overflow-hidden">
-              {!isEmptyState && (
-                <div
-                  className="h-full bg-gradient-to-r from-primary/80 to-primary rounded-full transition-all duration-500 ease-in-out"
-                  style={{ width: `${token.percentage || 0}%` }}
-                />
-              )}
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
 
   return (
     <div className="bg-white/50 backdrop-blur-sm rounded-xl w-full overflow-hidden">
@@ -181,13 +70,20 @@ export default function WalletPortfolioTable() {
       <div className="p-0">
         {isMobile ? (
           <div>
-            {isInitialLoading || !displayData?.tokens.length
-              ? emptyTokens.map((token) =>
-                  renderMobileTokenCard(token, true, true)
-                )
+            {!isConnected || isInitialLoading || !displayData?.tokens.length
+              ? emptyTokens.map((token) => (
+                  <TokenCardMobile
+                    key={token.symbol}
+                    token={token}
+                    isLoading={true}
+                    isEmptyState={true}
+                  />
+                ))
               : displayData.tokens
                   .sort((a, b) => b.value - a.value)
-                  .map((token) => renderMobileTokenCard(token, false))}
+                  .map((token) => (
+                    <TokenCardMobile key={token.symbol} token={token} />
+                  ))}
           </div>
         ) : (
           <div className="overflow-x-auto">
@@ -212,7 +108,7 @@ export default function WalletPortfolioTable() {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {isInitialLoading || !displayData?.tokens.length
+                {!isConnected || isInitialLoading || !displayData?.tokens.length
                   ? emptyTokens.map((token) => (
                       <TableRow
                         key={token.symbol}
@@ -324,20 +220,6 @@ export default function WalletPortfolioTable() {
             </Table>
           </div>
         )}
-      </div>
-      <div className="p-4 sm:p-6 border-t bg-background/50">
-        <div className="flex justify-between items-center">
-          <span className="text-sm text-muted-foreground">
-            Total Portfolio Value
-          </span>
-          {isInitialLoading || !displayData ? (
-            <Skeleton className="h-6 w-24" />
-          ) : (
-            <span className="text-lg font-semibold">
-              ${formatNumber(displayData.totalValue)}
-            </span>
-          )}
-        </div>
       </div>
     </div>
   );

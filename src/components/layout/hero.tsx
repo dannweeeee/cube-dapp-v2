@@ -87,13 +87,13 @@ const Hero = () => {
         className="container mx-auto mt-16 relative z-10"
       >
         <div className="relative w-full md:w-11/12 lg:w-10/12 mx-auto overflow-hidden">
-          <div className="absolute inset-0 bg-gradient-to-t from-black/10 to-transparent rounded-xl z-10" />
+          <div className="absolute inset-0 z-10" />
           <Image
-            src="/assets/png/cube-cover-banner-v4.png"
+            src="/assets/png/cube-cover-banner-v5.png"
             height={720}
             width={1080}
             alt="Cube Banner"
-            className="w-full h-auto rounded-3xl shadow-2xl transform transition-transform duration-700 hover:scale-[1.02]"
+            className="w-full h-auto rounded-xl transform transition-transform duration-700 hover:scale-[1.02]"
           />
         </div>
       </motion.div>
