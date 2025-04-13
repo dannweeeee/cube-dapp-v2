@@ -24,6 +24,7 @@ export interface Transaction {
   merchant_uen: string;
   user_wallet_address: string;
   amount: number;
+  currency: string;
   created_at: Date;
 }
 

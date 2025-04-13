@@ -27,6 +27,7 @@ import UsdcAbi from "@/abis/UsdcAbi";
 import XsgdAbi from "@/abis/XsgdAbi";
 import { useCheckIfMerchantChoseXsgd } from "@/hooks/useCheckIfMerchantChoseXsgd";
 import { useCheckIfMerchantVaultIsEnabledByUen } from "@/hooks/useCheckIfMerchantVaultIsEnabledByUen";
+import axios from "axios";
 
 interface PayliaoConfirmationModalProps {
   isOpen: boolean;
@@ -47,17 +48,16 @@ export function PayliaoConfirmationModal({
   onSuccess,
   isTransactionInProgress,
 }: PayliaoConfirmationModalProps) {
-  const { address } = useAccount();
   const { isMerchantVaultEnabled } = useCheckIfMerchantVaultIsEnabledByUen(uen);
   const { isMerchantChoseXsgd } = useCheckIfMerchantChoseXsgd(uen);
-
-  console.log("isMerchantVaultEnabled", isMerchantVaultEnabled);
-  console.log("isMerchantChoseXsgd", isMerchantChoseXsgd);
-
+  const { address } = useAccount();
   const validSgdAmount = isNaN(sgdAmount) ? 0 : sgdAmount;
   const usdcAmount = BigInt(Math.ceil(validSgdAmount * 0.77 * 10 ** 6));
   const xsgdAmount = BigInt(Math.ceil(validSgdAmount * 10 ** 18));
   const formattedUsdcAmount = formatUnits(usdcAmount, 6);
+
+  console.log("usdcAmount", usdcAmount);
+  console.log("formattedUsdcAmount", formattedUsdcAmount);
 
   const { data } = useReadContract({
     abi: RegistryAbi,
@@ -90,7 +90,31 @@ export function PayliaoConfirmationModal({
 
       await waitForTransactionReceipt(wagmiConfig, { hash: transferHash });
 
-      onSuccess();
+      const response = await axios.post(
+        "/api/create-transaction",
+        {
+          transaction_hash: transferHash,
+          merchant_uen: uen,
+          user_wallet_address: address,
+          amount: formattedUsdcAmount,
+          currency: "USDC",
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      if (response.status === 200) {
+        console.log(
+          "Transaction added to database successfully",
+          response.data
+        );
+        onSuccess();
+      } else {
+        throw new Error("Failed to add transaction to database");
+      }
     } catch (error) {
       onError(error);
     }
@@ -120,7 +144,31 @@ export function PayliaoConfirmationModal({
 
       await waitForTransactionReceipt(wagmiConfig, { hash: transferHash });
 
-      onSuccess();
+      const response = await axios.post(
+        "/api/create-transaction",
+        {
+          transaction_hash: transferHash,
+          merchant_uen: uen,
+          user_wallet_address: address,
+          amount: sgdAmount,
+          currency: "XSGD",
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      if (response.status === 200) {
+        console.log(
+          "Transaction added to database successfully",
+          response.data
+        );
+        onSuccess();
+      } else {
+        throw new Error("Failed to add transaction to database");
+      }
     } catch (error) {
       onError(error);
     }
@@ -149,7 +197,31 @@ export function PayliaoConfirmationModal({
 
       await waitForTransactionReceipt(wagmiConfig, { hash: transferHash });
 
-      onSuccess();
+      const response = await axios.post(
+        "/api/create-transaction",
+        {
+          transaction_hash: transferHash,
+          merchant_uen: uen,
+          user_wallet_address: address,
+          amount: formattedUsdcAmount,
+          currency: "USDC",
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      if (response.status === 200) {
+        console.log(
+          "Transaction added to database successfully",
+          response.data
+        );
+        onSuccess();
+      } else {
+        throw new Error("Failed to add transaction to database");
+      }
     } catch (error) {
       onError(error);
     }
