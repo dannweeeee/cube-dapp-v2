@@ -56,8 +56,9 @@ export async function getMerchantByWalletAddress(
   Array<{
     uen: string;
     merchant_name: string;
-    username: string;
+    merchant_username: string;
     merchant_wallet_address: string;
+    prefer_xsgd: boolean;
     is_vault_enabled: boolean;
     created_at: Date;
     updated_at: Date;
@@ -73,8 +74,9 @@ export async function getMerchantByUEN(uen: SelectMerchant["uen"]): Promise<
   Array<{
     uen: string;
     merchant_name: string;
-    username: string;
+    merchant_username: string;
     merchant_wallet_address: string;
+    prefer_xsgd: boolean;
     is_vault_enabled: boolean;
     created_at: Date;
     updated_at: Date;
@@ -95,6 +97,7 @@ export async function getTransactionsByWalletAddress(
     merchant_uen: string;
     user_wallet_address: string;
     amount: string;
+    currency: string;
     created_at: Date;
   }>
 > {
@@ -112,6 +115,7 @@ export async function getTransactionsByUEN(
     merchant_uen: string;
     user_wallet_address: string;
     amount: string;
+    currency: string;
     created_at: Date;
   }>
 > {

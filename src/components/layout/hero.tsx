@@ -12,17 +12,21 @@ import { useAccount } from "wagmi";
 
 const Hero = () => {
   const router = useRouter();
-  const { address } = useAccount();
+  const { address, isConnected } = useAccount();
   const { login } = useLogin();
   const { user } = useCubeContext();
 
   useEffect(() => {
-    if (address && user) {
-      router.push("/wallet");
-    } else if (address && !user) {
-      router.push("/register");
+    if (isConnected) {
+      if (address && user) {
+        router.push("/wallet");
+      } else if (address && !user) {
+        router.push("/register");
+      }
+    } else {
+      router.push("/");
     }
-  }, [address, user, router]);
+  }, [isConnected, router, address, user]);
 
   const fadeInUpVariant = {
     hidden: { opacity: 0, y: 20 },

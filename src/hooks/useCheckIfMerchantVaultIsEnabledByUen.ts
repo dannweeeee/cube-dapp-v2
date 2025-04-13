@@ -2,9 +2,7 @@ import { useState, useEffect } from "react";
 import { Merchant } from "@/lib/types";
 import { Address } from "viem";
 
-export function useCheckIfMerchantVaultIsEnabled(
-  merchantWalletAddress: Address | undefined
-) {
+export function useCheckIfMerchantVaultIsEnabledByUen(uen: string) {
   const [isMerchantVaultEnabled, setIsMerchantVaultEnabled] = useState<
     boolean | null
   >(null);
@@ -13,7 +11,7 @@ export function useCheckIfMerchantVaultIsEnabled(
 
   useEffect(() => {
     async function fetchMerchantVaultStatus() {
-      if (!merchantWalletAddress) {
+      if (!uen) {
         setIsMerchantVaultEnabled(null);
         setError(null);
         return;
@@ -23,18 +21,15 @@ export function useCheckIfMerchantVaultIsEnabled(
       setError(null);
 
       try {
-        const response = await fetch(
-          `/api/get-merchant-by-address?merchant_wallet_address=${merchantWalletAddress}`,
-          {
-            method: "GET",
-            headers: {
-              Accept: "application/json",
-              "Cache-Control": "no-cache",
-              Pragma: "no-cache",
-            },
-            credentials: "same-origin",
-          }
-        );
+        const response = await fetch(`/api/get-merchant-by-uen?uen=${uen}`, {
+          method: "GET",
+          headers: {
+            Accept: "application/json",
+            "Cache-Control": "no-cache",
+            Pragma: "no-cache",
+          },
+          credentials: "same-origin",
+        });
         if (!response.ok) {
           throw new Error("Failed to fetch merchant");
         }
@@ -50,7 +45,7 @@ export function useCheckIfMerchantVaultIsEnabled(
     }
 
     fetchMerchantVaultStatus();
-  }, [merchantWalletAddress]);
+  }, [uen]);
 
   return { isMerchantVaultEnabled, loading, error };
 }

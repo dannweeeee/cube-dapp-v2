@@ -37,8 +37,9 @@ export async function GET(request: NextRequest) {
       JSON.stringify({
         uen: merchant.uen,
         merchant_name: merchant.merchant_name,
-        username: merchant.username,
+        merchant_username: merchant.merchant_username,
         merchant_wallet_address: merchant.merchant_wallet_address,
+        prefer_xsgd: merchant.prefer_xsgd,
         is_vault_enabled: merchant.is_vault_enabled,
         created_at: merchant.created_at,
         updated_at: merchant.updated_at,

@@ -3,7 +3,7 @@
 import RegistryAbi from "@/abis/RegistryAbi";
 import { Badge } from "@/components/ui/badge";
 import { useCheckIfMerchantRegistered } from "@/hooks/useCheckIfMerchantRegistered";
-import { useCheckIfMerchantVaultIsEnabled } from "@/hooks/useCheckIfMerchantVaultIsEnabled";
+import { useCheckIfMerchantVaultIsEnabledByAddress } from "@/hooks/useCheckIfMerchantVaultIsEnabledByAddress";
 import { BASE_SEPOLIA_REGISTRY_ADDRESS } from "@/lib/constants";
 import { Store } from "lucide-react";
 import { useMemo } from "react";
@@ -19,7 +19,7 @@ import MerchantUsdcBalanceCard from "./merchant-usdc-balance-card";
 export default function MerchantComponent() {
   const { address } = useAccount();
   const { isRegistered } = useCheckIfMerchantRegistered(address);
-  const { isMerchantVaultEnabled } = useCheckIfMerchantVaultIsEnabled(address);
+  const { isMerchantVaultEnabled } = useCheckIfMerchantVaultIsEnabledByAddress(address);
 
   const { data, isLoading } = useReadContract({
     abi: RegistryAbi,

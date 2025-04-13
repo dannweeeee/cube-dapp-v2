@@ -30,13 +30,6 @@ export function useFetchUserDetailsByAddress(walletAddress: string | null) {
           }
         );
 
-        // Log the full response for debugging
-        console.log("Response:", {
-          status: response.status,
-          statusText: response.statusText,
-          headers: Object.fromEntries(response.headers.entries()),
-        });
-
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
         }

@@ -2,7 +2,7 @@
 
 import { useFetchUserDetailsByAddress } from "@/hooks/useFetchUserDetailsByAddress";
 import { usePortfolioData } from "@/hooks/usePortfolioData";
-import { PortfolioData, User } from "@/lib/types";
+import { Merchant, PortfolioData, User } from "@/lib/types";
 import { useContext, createContext, useEffect } from "react";
 import { useAccount } from "wagmi";
 

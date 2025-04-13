@@ -1,7 +1,6 @@
 "use client";
 
-import React, { useState, useRef } from "react";
-import axios from "axios";
+import React, { useState } from "react";
 import { motion } from "framer-motion";
 
 import { Label } from "@/components/ui/label";
@@ -11,13 +10,13 @@ import { Button } from "@/components/ui/button";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { useRouter } from "next/navigation";
 
 import { toast } from "sonner";
-import { useAccount } from "wagmi";
 import { Scanner } from "@yudiel/react-qr-scanner";
 import { ArrowRight, ScanQrCode, X, CreditCard } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { PayliaoConfirmationModal } from "./payliao-confirmation";
+import { useRouter } from "next/navigation";
 
 const payliaoFormSchema = z.object({
   uen: z.string().min(4, "UEN must be at least 4 characters").max(50),
@@ -27,12 +26,16 @@ const payliaoFormSchema = z.object({
 type PayliaoFormValues = z.infer<typeof payliaoFormSchema>;
 
 export function PayliaoForm() {
+  const router = useRouter();
   const [scanData, setScanData] = useState<boolean>(true);
+  const [isConfirmationOpen, setIsConfirmationOpen] = useState(false);
+  const [isTransactionInProgress, setIsTransactionInProgress] = useState(false);
 
   const {
     register,
     handleSubmit,
     setValue,
+    watch,
     formState: { errors },
   } = useForm<PayliaoFormValues>({
     resolver: zodResolver(payliaoFormSchema),
@@ -41,10 +44,11 @@ export function PayliaoForm() {
       amount: 0,
     },
   });
-  const { address } = useAccount();
 
-  const router = useRouter();
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const uen = watch("uen");
+  const amount = watch("amount");
 
   const handleScan = (data: string) => {
     function isLetter(char: string) {
@@ -113,6 +117,7 @@ export function PayliaoForm() {
   const onSubmit = async (data: PayliaoFormValues) => {
     setIsSubmitting(true);
     try {
+      setIsConfirmationOpen(true);
     } catch (error) {
       console.error("Payment error:", error);
       toast.error(
@@ -121,6 +126,19 @@ export function PayliaoForm() {
     } finally {
       setIsSubmitting(false);
     }
+  };
+
+  const handleError = (error: any) => {
+    console.error("Transaction error:", error);
+    toast.error("Transaction failed. Please try again.");
+    setIsTransactionInProgress(false);
+  };
+
+  const handleSuccess = () => {
+    toast.success("Payment successful!");
+    setIsTransactionInProgress(false);
+    setIsConfirmationOpen(false);
+    router.push("/wallet");
   };
 
   const containerVariants = {
@@ -340,6 +358,16 @@ export function PayliaoForm() {
           </motion.form>
         )}
       </motion.div>
+
+      <PayliaoConfirmationModal
+        isOpen={isConfirmationOpen}
+        onOpenChange={setIsConfirmationOpen}
+        uen={uen}
+        sgdAmount={amount}
+        onError={handleError}
+        onSuccess={handleSuccess}
+        isTransactionInProgress={isTransactionInProgress}
+      />
     </div>
   );
 }
