@@ -3,20 +3,16 @@
 import RegistryAbi from "@/abis/RegistryAbi";
 import { Badge } from "@/components/ui/badge";
 import { useCheckIfMerchantRegistered } from "@/hooks/useCheckIfMerchantRegistered";
-import { useCheckIfMerchantVaultIsEnabledByUen } from "@/hooks/useCheckIfMerchantVaultIsEnabledByUen";
 import { BASE_SEPOLIA_REGISTRY_ADDRESS } from "@/lib/constants";
 import { Store } from "lucide-react";
 import { useMemo } from "react";
 import { useAccount, useReadContract } from "wagmi";
-import MerchantDetailsCard from "./merchant-details-card";
-import MerchantVaultBalanceCard from "./merchant-vault-balance-card";
 import MerchantSalesTable from "./merchant-sales-table";
 import MerchantRegistrationModal from "./merchant-registration-modal";
 import { Skeleton } from "@/components/ui/skeleton";
 import MerchantXsgdBalanceCard from "./merchant-xsgd-balance-card";
 import MerchantUsdcBalanceCard from "./merchant-usdc-balance-card";
 import MerchantItem from "./merchant-item";
-
 
 export default function MerchantComponent() {
   const { address } = useAccount();
@@ -77,7 +73,7 @@ export default function MerchantComponent() {
             ) : (
               <div className="grid gap-6 grid-cols-1">
                 {merchants.map((merchant) => (
-                  <MerchantItem key={merchant.address} merchant={merchant} />
+                  <MerchantItem key={merchant.uen} merchant={merchant} />
                 ))}
               </div>
             )}

@@ -14,7 +14,6 @@ import { usePortfolioData } from "@/hooks/usePortfolioData";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { AlertCircle, Coins } from "lucide-react";
-import { RingLoader } from "react-spinners";
 import { useIsMobile } from "@/hooks/useIsMobile";
 import { useEffect, useState } from "react";
 import { TokenCardMobile } from "./token-card-mobile";

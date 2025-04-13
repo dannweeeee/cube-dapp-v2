@@ -39,7 +39,6 @@ export function useCheckIfMerchantVaultIsEnabledByAddress(
           throw new Error("Failed to fetch merchant");
         }
         const data: Merchant = await response.json();
-        console.log("Merchant data:", data);
         setIsMerchantVaultEnabled(data.is_vault_enabled);
       } catch (error) {
         setError(error instanceof Error ? error.message : "An error occurred");

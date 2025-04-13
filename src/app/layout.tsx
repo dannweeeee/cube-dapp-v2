@@ -7,7 +7,7 @@ import Providers from "@/components/providers";
 import { CubeProvider } from "@/contexts/cube-provider";
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://usecube.vercel.app"),
+  metadataBase: new URL("https://cubepay.vercel.app"),
   title: "Cube",
   description: "Real World Payments Solution with Crypto",
   keywords: [

@@ -34,7 +34,6 @@ export function useCheckIfMerchantChoseXsgd(uen: string) {
           throw new Error("Failed to fetch merchant");
         }
         const data: Merchant = await response.json();
-        console.log("Merchant data:", data);
         setIsMerchantChoseXsgd(data.prefer_xsgd);
       } catch (error) {
         setError(error instanceof Error ? error.message : "An error occurred");

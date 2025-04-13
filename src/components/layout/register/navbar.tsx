@@ -3,7 +3,6 @@
 import Link from "next/link";
 import Image from "next/image";
 import React from "react";
-import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import { useAccount } from "wagmi";
 
