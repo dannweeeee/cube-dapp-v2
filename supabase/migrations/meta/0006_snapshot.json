@@ -1,6 +1,6 @@
 {
-  "id": "e7347a62-d360-443e-958f-41bb5049ca91",
-  "prevId": "801083fb-24f5-436c-bfc8-a29e1420977f",
+  "id": "95853255-4938-4573-8887-ef7160926830",
+  "prevId": "69ef4e9a-9eba-4667-9371-99274a15844b",
   "version": "7",
   "dialect": "postgresql",
   "tables": {
@@ -20,8 +20,8 @@
           "primaryKey": false,
           "notNull": true
         },
-        "username": {
-          "name": "username",
+        "merchant_username": {
+          "name": "merchant_username",
           "type": "text",
           "primaryKey": false,
           "notNull": true
@@ -32,8 +32,14 @@
           "primaryKey": false,
           "notNull": true
         },
-        "is_vault": {
-          "name": "is_vault",
+        "prefer_xsgd": {
+          "name": "prefer_xsgd",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "is_vault_enabled": {
+          "name": "is_vault_enabled",
           "type": "boolean",
           "primaryKey": false,
           "notNull": true
@@ -55,7 +61,10 @@
       "indexes": {},
       "foreignKeys": {},
       "compositePrimaryKeys": {},
-      "uniqueConstraints": {}
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
     },
     "public.transactions_table": {
       "name": "transactions_table",
@@ -85,24 +94,27 @@
           "primaryKey": false,
           "notNull": true
         },
+        "currency": {
+          "name": "currency",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
         "created_at": {
           "name": "created_at",
           "type": "timestamp",
           "primaryKey": false,
           "notNull": true,
           "default": "now()"
-        },
-        "updated_at": {
-          "name": "updated_at",
-          "type": "timestamp",
-          "primaryKey": false,
-          "notNull": true
         }
       },
       "indexes": {},
       "foreignKeys": {},
       "compositePrimaryKeys": {},
-      "uniqueConstraints": {}
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
     },
     "public.users_table": {
       "name": "users_table",
@@ -170,12 +182,18 @@
             "email"
           ]
         }
-      }
+      },
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
     }
   },
   "enums": {},
   "schemas": {},
   "sequences": {},
+  "roles": {},
+  "policies": {},
+  "views": {},
   "_meta": {
     "columns": {},
     "schemas": {},

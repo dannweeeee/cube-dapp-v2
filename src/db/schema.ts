@@ -24,8 +24,9 @@ export type SelectUser = typeof usersTable.$inferSelect;
 export const merchantTable = pgTable("merchant_table", {
   uen: text("uen").primaryKey(),
   merchant_name: text("merchant_name").notNull(),
-  username: text("username").notNull(),
+  merchant_username: text("merchant_username").notNull(),
   merchant_wallet_address: text("merchant_wallet_address").notNull(),
+  prefer_xsgd: boolean("prefer_xsgd").notNull(),
   is_vault_enabled: boolean("is_vault_enabled").notNull(),
   created_at: timestamp("created_at").notNull().defaultNow(),
   updated_at: timestamp("updated_at")
@@ -41,6 +42,7 @@ export const transactionsTable = pgTable("transactions_table", {
   merchant_uen: text("merchant_uen").notNull(),
   user_wallet_address: text("user_wallet_address").notNull(),
   amount: decimal("amount", { precision: 10, scale: 5 }).notNull(),
+  currency: text("currency").notNull(),
   created_at: timestamp("created_at").notNull().defaultNow(),
 });
 
