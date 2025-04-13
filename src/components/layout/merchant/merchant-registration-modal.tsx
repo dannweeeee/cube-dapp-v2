@@ -24,8 +24,8 @@ import { registerMerchant } from "@/helpers/register-merchant";
 import { toast } from "sonner";
 import { ArrowRight, ScanQrCode, Store, X } from "lucide-react";
 import { Scanner } from "@yudiel/react-qr-scanner";
-import { useIsMobile } from "@/hooks/useIsMobile";
 import { useCubeContext } from "@/contexts/cube-provider";
+import { Badge } from "@/components/ui/badge";
 
 const merchantRegistrationFormSchema = z.object({
   uen: z.string().min(4, "UEN must be at least 4 characters").max(50),
@@ -33,6 +33,7 @@ const merchantRegistrationFormSchema = z.object({
     .string()
     .min(4, "Name must be at least 4 characters")
     .max(100),
+  prefer_xsgd: z.boolean(),
   vault: z.boolean(),
 });
 
@@ -48,12 +49,14 @@ export default function MerchantRegistrationModal() {
     handleSubmit,
     setValue,
     control,
+    watch,
     formState: { errors },
   } = useForm<RegistrationFormValues>({
     resolver: zodResolver(merchantRegistrationFormSchema),
     defaultValues: {
       uen: "",
       merchantname: "",
+      prefer_xsgd: false,
       vault: false,
     },
   });
@@ -62,6 +65,7 @@ export default function MerchantRegistrationModal() {
   const { address } = useAccount();
 
   const { user } = useCubeContext();
+  const preferXsgd = watch("prefer_xsgd");
 
   const handleScan = (data: string) => {
     function isLetter(char: string) {
@@ -146,13 +150,16 @@ export default function MerchantRegistrationModal() {
             const response = await axios.post("/api/create-merchant", {
               uen: data.uen,
               merchant_name: data.merchantname,
-              username: user.username,
+              merchant_username: user.username,
               merchant_wallet_address: address,
-              is_vault_enabled: data.vault,
+              prefer_xsgd: data.prefer_xsgd,
+              is_vault_enabled: data.prefer_xsgd ? false : data.vault,
             });
 
             console.log("Merchant registered successfully", response);
             toast.success("Merchant registered successfully.");
+            setOpen(false);
+            router.push("/merchant");
           } catch (error) {
             if (axios.isAxiosError(error) && error.response) {
               const errorData = error.response.data;
@@ -176,7 +183,6 @@ export default function MerchantRegistrationModal() {
           }
         }
         setOpen(false);
-        router.push("/merchant");
       } catch (error) {
         console.error("Error registering merchant:", error);
         toast.error("Registration Error", {
@@ -263,14 +269,14 @@ export default function MerchantRegistrationModal() {
             </>
           ) : (
             <form className="mt-4 space-y-5" onSubmit={handleSubmit(onSubmit)}>
-              <LabelInputContainer>
+              <div className="flex flex-col space-y-1.5 w-full">
                 <Label htmlFor="uen" className="text-sm font-medium">
                   Merchant UEN
                 </Label>
                 <div className="relative flex w-full">
                   <Input
                     id="uen"
-                    placeholder="00022100K"
+                    placeholder="12345678K"
                     type="text"
                     {...register("uen")}
                     className={cn(
@@ -298,9 +304,9 @@ export default function MerchantRegistrationModal() {
                     {errors.uen.message}
                   </p>
                 )}
-              </LabelInputContainer>
+              </div>
 
-              <LabelInputContainer>
+              <div className="flex flex-col space-y-1.5 w-full">
                 <Label htmlFor="merchantname" className="text-sm font-medium">
                   Merchant Name
                 </Label>
@@ -320,31 +326,98 @@ export default function MerchantRegistrationModal() {
                     {errors.merchantname.message}
                   </p>
                 )}
-              </LabelInputContainer>
+              </div>
 
-              <LabelInputContainer className="pt-2">
+              <div className="flex flex-col space-y-2 w-full bg-gradient-to-r from-primary/5 to-transparent p-4 rounded-xl border border-primary/10 shadow-sm">
                 <div className="flex items-center justify-between">
-                  <Label htmlFor="vault" className="text-sm font-medium">
-                    Enable Cube Vault
-                  </Label>
-                  <Controller
-                    name="vault"
-                    control={control}
-                    render={({ field }) => (
-                      <Switch
-                        id="vault"
-                        checked={field.value}
-                        onCheckedChange={field.onChange}
-                        className="data-[state=checked]:bg-primary"
-                      />
-                    )}
-                  />
+                  <div className="flex items-center gap-2">
+                    <Label
+                      htmlFor="currency"
+                      className="text-sm font-medium text-primary"
+                    >
+                      Currency Preference
+                    </Label>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <Controller
+                      name="prefer_xsgd"
+                      control={control}
+                      render={({ field }) => (
+                        <div className="flex items-center gap-2">
+                          <Badge
+                            variant="outline"
+                            className="text-xs px-2 py-0.5 bg-primary/10 text-primary border-primary/20"
+                          >
+                            {field.value ? "XSGD" : "USDC"}
+                          </Badge>
+                          <Switch
+                            id="prefer_xsgd"
+                            checked={field.value}
+                            onCheckedChange={field.onChange}
+                          />
+                        </div>
+                      )}
+                    />
+                  </div>
                 </div>
-                <p className="text-xs text-muted-foreground mt-1">
-                  Cube vaults are yield-generating vaults that earn interest on
-                  your funds
+                <p className="text-xs text-muted-foreground mt-1 max-w-md">
+                  Choose your preferred currency for transactions. XSGD is a
+                  Singapore dollar stablecoin, while USDC is a US dollar
+                  stablecoin. We recommend XSGD for Singapore-based merchants.
                 </p>
-              </LabelInputContainer>
+              </div>
+
+              {!preferXsgd && (
+                <div className="flex flex-col space-y-2 w-full bg-gradient-to-r from-primary/5 to-transparent p-4 rounded-xl border border-primary/10 shadow-sm">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      <Label
+                        htmlFor="vault"
+                        className="text-sm font-medium text-primary"
+                      >
+                        Enable Cube Vault
+                      </Label>
+                      <Badge
+                        variant="outline"
+                        className="text-xs bg-primary/10 text-primary border-primary/20 px-2 py-0.5"
+                      >
+                        Recommended
+                      </Badge>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <Controller
+                        name="vault"
+                        control={control}
+                        render={({ field }) => (
+                          <div className="flex items-center gap-2">
+                            <Badge
+                              variant="outline"
+                              className={`text-xs px-2 py-0.5 ${
+                                field.value
+                                  ? "bg-green-100 text-green-600 border-green-200"
+                                  : "bg-red-100 text-red-600 border-red-200"
+                              }`}
+                            >
+                              {field.value ? "Enabled" : "Disabled"}
+                            </Badge>
+                            <Switch
+                              id="vault"
+                              checked={field.value}
+                              onCheckedChange={field.onChange}
+                              className="data-[state=checked]:bg-primary"
+                            />
+                          </div>
+                        )}
+                      />
+                    </div>
+                  </div>
+                  <p className="text-xs text-muted-foreground mt-1 max-w-md">
+                    Cube vaults are yield-generating vaults that automatically
+                    earn interest on your funds while maintaining liquidity for
+                    your business operations.
+                  </p>
+                </div>
+              )}
 
               <div className="pt-4">
                 <Button
@@ -374,17 +447,3 @@ export default function MerchantRegistrationModal() {
     </Dialog>
   );
 }
-
-const LabelInputContainer = ({
-  children,
-  className,
-}: {
-  children: React.ReactNode;
-  className?: string;
-}) => {
-  return (
-    <div className={cn("flex flex-col space-y-1.5 w-full", className)}>
-      {children}
-    </div>
-  );
-};

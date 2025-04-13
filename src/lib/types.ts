@@ -11,8 +11,9 @@ export interface User {
 export interface Merchant {
   uen: string;
   merchant_name: string;
-  username: string;
+  merchant_username: string;
   merchant_wallet_address: string;
+  prefer_xsgd: boolean;
   is_vault_enabled: boolean;
   created_at: Date;
   updated_at: Date;

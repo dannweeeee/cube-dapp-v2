@@ -1,5 +1,6 @@
 import { Badge } from "@/components/ui/badge";
 import { ScanQrCode } from "lucide-react";
+import { PayliaoForm } from "./payliao-form";
 
 export default function PayliaoComponent() {
   return (
@@ -10,7 +11,9 @@ export default function PayliaoComponent() {
           <span className="font-medium text-sm">Payliao</span>
         </Badge>
       </div>
-      <div className="flex flex-col gap-4 md:gap-8"></div>
+      <div className="flex flex-col gap-6 md:gap-10">
+        <PayliaoForm />
+      </div>
     </div>
   );
 }
