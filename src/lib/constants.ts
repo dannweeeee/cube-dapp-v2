@@ -11,13 +11,6 @@ import {
  */
 export const navItems = [
   {
-    title: "Home",
-    url: "/home",
-    segment: "home",
-    icon: LayoutDashboard,
-    external: false,
-  },
-  {
     title: "Wallet",
     url: "/wallet",
     segment: "wallet",

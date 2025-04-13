@@ -5,17 +5,17 @@ import { useRouter } from "next/navigation";
 import { HandCoins, SendHorizonal, Wallet } from "lucide-react";
 import WalletPortfolioTable from "./wallet-portfolio-table";
 import { useAccount } from "wagmi";
-import { usePortfolioData } from "@/hooks/usePortfolioData";
 import { Badge } from "@/components/ui/badge";
 import { useFundWallet, usePrivy } from "@privy-io/react-auth";
 import { toast } from "sonner";
 import { base } from "viem/chains";
 import WalletBalanceCard from "./wallet-balance-card";
+import { useCubeContext } from "@/contexts/cube-provider";
 
 export default function WalletComponent() {
   const router = useRouter();
-  const { address, isConnected } = useAccount();
-  const { portfolioData, isLoading } = usePortfolioData(address, isConnected);
+  const { address } = useAccount();
+  const { portfolioData } = useCubeContext();
   const { ready, authenticated } = usePrivy();
   const { fundWallet } = useFundWallet({
     onUserExited({ balance }) {

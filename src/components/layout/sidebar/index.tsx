@@ -24,7 +24,7 @@ const DashboardSidebarHeader = () => {
   return (
     <SidebarHeader className="py-4">
       <div className="flex items-center justify-between px-4">
-        <Link href="/home" className="flex items-center space-x-2">
+        <Link href="/wallet" className="flex items-center space-x-2">
           <Image
             src="/assets/svg/cube-blue.svg"
             alt="Cube Logo"
@@ -53,9 +53,6 @@ export function DashboardSidebar() {
   const pathname = usePathname();
 
   const getIsActive = (itemSegment: string) => {
-    if (itemSegment === "home") {
-      return pathname === "/home";
-    }
     if (itemSegment === "wallet") {
       return pathname === "/wallet";
     }

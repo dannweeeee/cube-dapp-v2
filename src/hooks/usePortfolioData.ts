@@ -5,20 +5,7 @@ import { useUserUsdcBalance } from "./useUserUsdcBalance";
 import { useUserXsgdBalance } from "./useUserXsgdBalance";
 import { usePublicClient } from "wagmi";
 import { getTokenPrices } from "@/service/alchemy";
-
-export interface TokenData {
-  symbol: string;
-  name: string;
-  balance: number;
-  price: number;
-  value: number;
-  percentage: number;
-}
-
-export interface PortfolioData {
-  tokens: TokenData[];
-  totalValue: number;
-}
+import { PortfolioData } from "@/lib/types";
 
 export function usePortfolioData(address: Address | undefined, ready: boolean) {
   const [isLoading, setIsLoading] = useState(false);

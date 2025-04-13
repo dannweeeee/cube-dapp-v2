@@ -3,13 +3,11 @@
 import Link from "next/link";
 import Image from "next/image";
 import React from "react";
-import { Button } from "@/components/ui/button";
-import { useLogin } from "@privy-io/react-auth";
+import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
+import { useAccount } from "wagmi";
 
 const Navbar = () => {
-  const { login } = useLogin();
-
   return (
     <>
       <motion.header
@@ -42,30 +40,6 @@ const Navbar = () => {
                 />
               </motion.div>
             </Link>
-          </motion.div>
-          <motion.div
-            initial={{ x: 20, opacity: 0 }}
-            animate={{ x: 0, opacity: 1 }}
-            transition={{ duration: 0.5, delay: 0.2 }}
-            className="flex-1 justify-end items-center hidden md:!flex gap-2"
-          >
-            <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-              <Button variant="default" className="rounded-xl" onClick={login}>
-                Login
-              </Button>
-            </motion.div>
-          </motion.div>
-          <motion.div
-            initial={{ x: 20, opacity: 0 }}
-            animate={{ x: 0, opacity: 1 }}
-            transition={{ duration: 0.5, delay: 0.2 }}
-            className="block md:hidden ml-8"
-          >
-            <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-              <Button variant="default" className="rounded-xl" onClick={login}>
-                Login
-              </Button>
-            </motion.div>
           </motion.div>
         </nav>
       </motion.header>

@@ -1,6 +1,6 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
-import { PortfolioData } from "@/hooks/usePortfolioData";
+import { PortfolioData } from "@/lib/types";
 import { formatNumber } from "@/helpers/format-number";
 
 export default function WalletBalanceCard({

@@ -20,12 +20,12 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm, Controller } from "react-hook-form";
 import { useRouter } from "next/navigation";
-import { useFetchUserDetailsByAddress } from "@/hooks/useFetchUserDetailsByAddress";
 import { registerMerchant } from "@/helpers/register-merchant";
 import { toast } from "sonner";
 import { ArrowRight, ScanQrCode, Store, X } from "lucide-react";
 import { Scanner } from "@yudiel/react-qr-scanner";
 import { useIsMobile } from "@/hooks/useIsMobile";
+import { useCubeContext } from "@/contexts/cube-provider";
 
 const merchantRegistrationFormSchema = z.object({
   uen: z.string().min(4, "UEN must be at least 4 characters").max(50),
@@ -42,7 +42,6 @@ export default function MerchantRegistrationModal() {
   const [open, setOpen] = useState(false);
   const [scanData, setScanData] = useState<boolean>(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const isMobile = useIsMobile();
 
   const {
     register,
@@ -62,7 +61,7 @@ export default function MerchantRegistrationModal() {
   const router = useRouter();
   const { address } = useAccount();
 
-  const { user } = useFetchUserDetailsByAddress(address || null);
+  const { user } = useCubeContext();
 
   const handleScan = (data: string) => {
     function isLetter(char: string) {

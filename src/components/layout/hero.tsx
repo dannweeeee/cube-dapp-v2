@@ -2,26 +2,27 @@
 
 import { Button } from "@/components/ui/button";
 import { Highlight } from "@/components/ui/hero-highlight";
-import { useFetchUserDetailsByAddress } from "@/hooks/useFetchUserDetailsByAddress";
+import { useCubeContext } from "@/contexts/cube-provider";
 import { useLogin } from "@privy-io/react-auth";
 import { motion } from "framer-motion";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
+import { useEffect } from "react";
 import { useAccount } from "wagmi";
 
 const Hero = () => {
   const router = useRouter();
   const { address } = useAccount();
-  const { user } = useFetchUserDetailsByAddress(address || null);
-  const { login } = useLogin({
-    onComplete: async () => {
-      if (user) {
-        router.push("/home");
-      } else {
-        router.push("/register");
-      }
-    },
-  });
+  const { login } = useLogin();
+  const { user } = useCubeContext();
+
+  useEffect(() => {
+    if (address && user) {
+      router.push("/wallet");
+    } else if (address && !user) {
+      router.push("/register");
+    }
+  }, [address, user, router]);
 
   const fadeInUpVariant = {
     hidden: { opacity: 0, y: 20 },

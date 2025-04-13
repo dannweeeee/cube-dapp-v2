@@ -4,6 +4,7 @@ import type { Metadata } from "next";
 import NProgressBar from "@/components/ui/nprogress-bar";
 import { Toaster } from "sonner";
 import Providers from "@/components/providers";
+import { CubeProvider } from "@/contexts/cube-provider";
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://usecube.vercel.app"),
@@ -33,10 +34,12 @@ export default function RootLayout({
       <body>
         <Providers>
           <NProgressBar>
-            <main className="min-h-screen circles">
-              {children}
-              <Toaster />
-            </main>
+            <CubeProvider>
+              <main className="min-h-screen circles">
+                {children}
+                <Toaster />
+              </main>
+            </CubeProvider>
           </NProgressBar>
         </Providers>
       </body>

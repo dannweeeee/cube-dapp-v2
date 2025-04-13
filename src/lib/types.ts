@@ -25,3 +25,17 @@ export interface Transaction {
   amount: number;
   created_at: Date;
 }
+
+export interface TokenData {
+  symbol: string;
+  name: string;
+  balance: number;
+  price: number;
+  value: number;
+  percentage: number;
+}
+
+export interface PortfolioData {
+  tokens: TokenData[];
+  totalValue: number;
+}

@@ -1,12 +1,13 @@
 "use client";
 
-import { useFetchUserDetailsByAddress } from "@/hooks/useFetchUserDetailsByAddress";
-import { useAccount } from "wagmi";
+import Navbar from "@/components/layout/register/navbar";
+import { RegistrationForm } from "@/components/layout/register/registration-form";
 
 export default function RegisterPage() {
-  const { address } = useAccount();
-  const { user } = useFetchUserDetailsByAddress(address || null);
-  console.log(user);
-
-  return <div>Register</div>;
+  return (
+    <div>
+      <Navbar />
+      <RegistrationForm />
+    </div>
+  );
 }
