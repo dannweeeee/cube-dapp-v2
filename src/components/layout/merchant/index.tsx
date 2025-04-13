@@ -3,7 +3,7 @@
 import RegistryAbi from "@/abis/RegistryAbi";
 import { Badge } from "@/components/ui/badge";
 import { useCheckIfMerchantRegistered } from "@/hooks/useCheckIfMerchantRegistered";
-import { useCheckIfMerchantVaultIsEnabledByAddress } from "@/hooks/useCheckIfMerchantVaultIsEnabledByAddress";
+import { useCheckIfMerchantVaultIsEnabledByUen } from "@/hooks/useCheckIfMerchantVaultIsEnabledByUen";
 import { BASE_SEPOLIA_REGISTRY_ADDRESS } from "@/lib/constants";
 import { Store } from "lucide-react";
 import { useMemo } from "react";
@@ -15,11 +15,12 @@ import MerchantRegistrationModal from "./merchant-registration-modal";
 import { Skeleton } from "@/components/ui/skeleton";
 import MerchantXsgdBalanceCard from "./merchant-xsgd-balance-card";
 import MerchantUsdcBalanceCard from "./merchant-usdc-balance-card";
+import MerchantItem from "./merchant-item";
+
 
 export default function MerchantComponent() {
   const { address } = useAccount();
   const { isRegistered } = useCheckIfMerchantRegistered(address);
-  const { isMerchantVaultEnabled } = useCheckIfMerchantVaultIsEnabledByAddress(address);
 
   const { data, isLoading } = useReadContract({
     abi: RegistryAbi,
@@ -75,30 +76,9 @@ export default function MerchantComponent() {
               </div>
             ) : (
               <div className="grid gap-6 grid-cols-1">
-                {merchants.map(
-                  (merchant: {
-                    uen: string;
-                    name: string;
-                    owner: string;
-                    address: string;
-                  }) => (
-                    <div
-                      key={merchant.address}
-                      className="grid grid-cols-1 md:grid-cols-2 gap-6"
-                    >
-                      <MerchantDetailsCard
-                        uen={merchant.uen}
-                        name={merchant.name}
-                      />
-                      {isMerchantVaultEnabled && (
-                        <MerchantVaultBalanceCard
-                          uen={merchant.uen}
-                          name={merchant.name}
-                        />
-                      )}
-                    </div>
-                  )
-                )}
+                {merchants.map((merchant) => (
+                  <MerchantItem key={merchant.address} merchant={merchant} />
+                ))}
               </div>
             )}
 

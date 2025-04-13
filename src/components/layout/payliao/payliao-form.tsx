@@ -15,7 +15,7 @@ import { toast } from "sonner";
 import { Scanner } from "@yudiel/react-qr-scanner";
 import { ArrowRight, ScanQrCode, X, CreditCard } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { PayliaoConfirmationModal } from "./payliao-confirmation";
+import { PayliaoConfirmationModal } from "./payliao-confirmation-modal";
 import { useRouter } from "next/navigation";
 
 const payliaoFormSchema = z.object({

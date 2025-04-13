@@ -24,7 +24,6 @@ export async function GET(request: NextRequest) {
 
   try {
     const users = await getUserByWalletAddress(walletAddress);
-    console.log("Found users:", users);
 
     return new NextResponse(JSON.stringify({ user: users[0] || null }), {
       status: 200,
