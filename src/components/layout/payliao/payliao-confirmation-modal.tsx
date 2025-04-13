@@ -56,9 +56,6 @@ export function PayliaoConfirmationModal({
   const xsgdAmount = BigInt(Math.ceil(validSgdAmount * 10 ** 18));
   const formattedUsdcAmount = formatUnits(usdcAmount, 6);
 
-  console.log("usdcAmount", usdcAmount);
-  console.log("formattedUsdcAmount", formattedUsdcAmount);
-
   const { data } = useReadContract({
     abi: RegistryAbi,
     address: BASE_SEPOLIA_REGISTRY_ADDRESS,
