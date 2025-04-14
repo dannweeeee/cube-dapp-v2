@@ -2,31 +2,12 @@
 
 import { Button } from "@/components/ui/button";
 import { Highlight } from "@/components/ui/hero-highlight";
-import { useCubeContext } from "@/contexts/cube-provider";
 import { useLogin } from "@privy-io/react-auth";
 import { motion } from "framer-motion";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
-import { useEffect } from "react";
-import { useAccount } from "wagmi";
 
 const Hero = () => {
-  const router = useRouter();
-  const { address, isConnected } = useAccount();
   const { login } = useLogin();
-  const { user } = useCubeContext();
-
-  useEffect(() => {
-    if (isConnected) {
-      if (address && user) {
-        router.push("/wallet");
-      } else if (address && !user) {
-        router.push("/register");
-      }
-    } else {
-      router.push("/");
-    }
-  }, [isConnected, router, address, user]);
 
   const fadeInUpVariant = {
     hidden: { opacity: 0, y: 20 },

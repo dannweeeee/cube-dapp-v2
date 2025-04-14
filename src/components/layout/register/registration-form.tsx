@@ -47,7 +47,6 @@ export function RegistrationForm() {
     },
   });
   const { address } = useAccount();
-  console.log(address);
 
   const router = useRouter();
   const [isSubmitting, setIsSubmitting] = useState(false);
