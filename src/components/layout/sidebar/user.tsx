@@ -26,11 +26,14 @@ import { useIsMobile } from "@/hooks/useIsMobile";
 import { Skeleton } from "@/components/ui/skeleton";
 import { toast } from "sonner";
 import { base } from "viem/chains";
+import { useDisconnect } from "wagmi";
 
 export default function User() {
   const router = useRouter();
+  const { disconnect } = useDisconnect();
   const { logout } = useLogout({
     onSuccess: async () => {
+      disconnect();
       router.push("/");
     },
   });

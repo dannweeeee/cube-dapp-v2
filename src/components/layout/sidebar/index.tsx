@@ -19,6 +19,7 @@ import {
 import { navItems } from "@/lib/constants";
 
 import DashboardSidebarUser from "./user";
+import { useRedirectUserToRoot } from "@/hooks/useRedirectUserToRoot";
 
 const DashboardSidebarHeader = () => {
   return (
@@ -51,6 +52,7 @@ const DashboardSidebarFooter = () => {
 
 export function DashboardSidebar() {
   const pathname = usePathname();
+  useRedirectUserToRoot();
 
   const getIsActive = (itemSegment: string) => {
     if (itemSegment === "wallet") {
