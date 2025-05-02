@@ -39,6 +39,7 @@ export function usePortfolioData(address: Address | undefined, ready: boolean) {
     const fetchPortfolioData = async () => {
       if (!shouldFetch) {
         setPortfolioData(null);
+        setIsLoading(false);
         return;
       }
 
@@ -91,7 +92,15 @@ export function usePortfolioData(address: Address | undefined, ready: boolean) {
     if (!ethLoading && !usdcLoading && !xsgdLoading) {
       fetchPortfolioData();
     }
-  }, [shouldFetch, ethBalance, usdcBalance, xsgdBalance]);
+  }, [
+    shouldFetch,
+    ethBalance,
+    usdcBalance,
+    xsgdBalance,
+    ethLoading,
+    usdcLoading,
+    xsgdLoading,
+  ]);
 
   useEffect(() => {
     const errors = [ethError, usdcError, xsgdError]
@@ -102,6 +111,15 @@ export function usePortfolioData(address: Address | undefined, ready: boolean) {
       setError(errors.join(", "));
     }
   }, [ethError, usdcError, xsgdError]);
+
+  // If we're not ready to fetch, we should not be loading
+  if (!shouldFetch) {
+    return {
+      isLoading: false,
+      portfolioData: null,
+      error: null,
+    };
+  }
 
   return {
     isLoading: isLoading || ethLoading || usdcLoading || xsgdLoading,

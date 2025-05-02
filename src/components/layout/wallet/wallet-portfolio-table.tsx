@@ -29,7 +29,7 @@ export default function WalletPortfolioTable() {
   const [displayData, setDisplayData] = useState(portfolioData);
 
   useEffect(() => {
-    if (!isLoading && portfolioData) {
+    if (!isLoading) {
       setDisplayData(portfolioData);
       setIsInitialLoading(false);
     }
